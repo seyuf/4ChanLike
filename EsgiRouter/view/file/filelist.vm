@@ -1,0 +1,37 @@
+#set ($files = $context.getAttribute("files") )
+
+To download a file just click on it. 
+Only ini txt gz jar war vm js can be to be downloaded !
+
+ <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+       <p>jdjej</p>
+      </h4>
+    </div>
+    <div class="panel-body">
+		<ul class="list-unstyled">
+		#foreach ($file in $files)
+			#if ($file.isDirectory())
+				<li><a href="$file.getName()/">$file.getName()</a></li>
+			#else
+				<li>
+  					$file.getName() 
+  					#if ( $context.getParameter("path") )
+  						<a class="btn btn-success" href="$context.getProperties().getProperty("serverRoot")/file/download$context.getParameter("path")/$file.getName()">
+							DOWNLOAD
+  						</a>
+  					#else
+  						<a class="btn btn-success" href="$context.getProperties().getProperty("serverRoot")/file/download/$file.getName()">
+							DOWNLOAD
+  						</a>
+  					#end
+				</li>
+			#end
+		#end  
+		</ul>
+	</div>
+</div>
+
+<p>$SERVER/file/upload/ to upload a file</p>
+<p>$SERVER/file/delete/ to delete uploaded files</p>

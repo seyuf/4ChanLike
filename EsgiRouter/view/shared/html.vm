@@ -1,0 +1,40 @@
+<html>
+   <head>
+     <title>toto</title>
+     $context.setCssDependency("css")
+     <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+   </head>
+   <body>
+    $context.getFragment("shared/main_header")
+    $context.getFragment("__CURRENT__")
+    $context.getFragment("shared/main_footer")
+
+<script>
+     var APP_CONTEXT = '$context.getProperties().get("serverRoot")';
+   </script> 
+   
+<!-- 
+    jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://code.jquery.com/jquery.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed 
+  -->
+  
+
+
+   <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+    <script src="$context.getProperties().get("serverRoot")/res/js/mylib.js"></script>
+$context.getJsUrls()
+    #foreach($jsUrl in $context.getJsUrls())
+		<script type="text/javascript" src="$jsUrl"></script>
+	#end
+
+<script>
+$(function(){
+	console.log('Im ready');    
+    #foreach($jsUrl in $context.getOnJsReady())
+		$jsUrl
+	#end
+});
+</script>
+   </body> 
+</html>

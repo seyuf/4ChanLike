@@ -1,0 +1,28 @@
+<web-app>
+    <context-param>
+        <param-name>javax.servlet.context.tempdir</param-name>
+        <param-value>C:\Users\mike\prive\tmp</param-value>
+    </context-param>
+    <context-param>
+		<param-name>config</param-name>
+		<param-value>./config.ini</param-value>
+	</context-param>
+	<error-page>
+	    <error-code> 404 </error-code>
+	    <location> /errors/404.html </location>
+	</error-page>
+    <servlet>
+        <servlet-name>FrontController</servlet-name>
+        <servlet-class>org.esgi.FrontController</servlet-class>
+    </servlet>
+    
+    <servlet-mapping>
+        <servlet-name>default</servlet-name>
+        <url-pattern>/res/*</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>FrontController</servlet-name>
+        <url-pattern>/*</url-pattern>
+    </servlet-mapping>
+</web-app>

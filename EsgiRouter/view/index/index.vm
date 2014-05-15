@@ -1,0 +1,9 @@
+
+
+<div id="container">
+</div>
+
+
+#set ($js = $context.getProperties().getProperty("serverRoot")+"/res/js/user/connect.js")
+$context.setJsDependency($js)
+$context.addOnJsReady("new Esgi.module.user.Connect({ id : '#container'})")

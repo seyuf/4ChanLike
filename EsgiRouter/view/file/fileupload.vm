@@ -1,0 +1,12 @@
+
+<h1>File Uploader</h1>
+Select a file to upload: <br />
+<form action="post" method="post" enctype="multipart/form-data">
+  <input type="file" name="file" size="50"/>
+  <br/>
+  <input type="submit" value="Upload File"/>
+</form>
+			
+			
+<p>$SERVER/file/delete/ to delete uploaded files</p>
+<p>$SERVER/file/list/ to browse the server</p>
