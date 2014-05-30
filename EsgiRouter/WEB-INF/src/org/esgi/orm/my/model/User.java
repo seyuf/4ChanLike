@@ -1,33 +1,51 @@
 package org.esgi.orm.my.model;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 import org.esgi.orm.my.annotations.ORM_EXTRA;
 import org.esgi.orm.my.annotations.ORM_FIELD;
 import org.esgi.orm.my.annotations.ORM_PK;
 import org.esgi.orm.my.annotations.ORM_SCHEMA;
 import org.esgi.orm.my.annotations.ORM_TABLE;
+import org.esgi.orm.my.interfaces.IUser;
 
-@ORM_SCHEMA("esgi")
-@ORM_TABLE("user")
-public class User {
+@ORM_SCHEMA("4shan")
+@ORM_TABLE("User")
+public class User implements IUser {
 	@ORM_PK
 	@ORM_EXTRA("AUTO_INCREMENT")
 	@ORM_FIELD("int")
-	public Integer id;
-	@ORM_FIELD("varchar (50)")
-	public String login;
-	@ORM_FIELD("varchar (50)")
-	public String password;
-	@ORM_FIELD("timestamp")
-	public volatile Date connectedAt;
-	public List<Role> roles = new ArrayList<>();
+	public Integer userId;
+	@ORM_FIELD("TEXT")
+	public String userMail;
+	@ORM_FIELD("TEXT")
+	public String userPseudo;
+
+	@Override
+	public int getId() {
+		return this.userId;
+	}
+
+	@Override
+	public String getMail() {
+		return this.userMail;
+	}
+
+	@Override
+	public void setMail(String mail) {
+		this.userMail = mail;
+	}
+
+	@Override
+	public String getPseudo() {
+		return this.userPseudo;
+	}
+
+	@Override
+	public void setPseudo(String pseudo) {
+		this.userMail = pseudo;
+	}
 	
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", login=" + login + ", password=" + password
-				+ ", connectedAt=" + connectedAt + ", roles = "+roles+"]";
+		return "User [id=" + userId + ", mail=" + userMail + ", pseudo=" + userPseudo+"]";
 	}
 }
