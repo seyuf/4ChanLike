@@ -39,5 +39,20 @@ public class File implements IFile {
 	public IComment getComment() {
 		return this.commentId;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof File) {
+			if (super.equals(obj)) {
+				return true;
+			} else {
+				File file = (File) obj;
+				if (file.fileID == this.fileID) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 
 }

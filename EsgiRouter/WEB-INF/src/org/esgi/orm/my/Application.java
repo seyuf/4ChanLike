@@ -16,7 +16,7 @@ public class Application {
 
 		System.out.println(Arrays.toString(User.class.getAnnotations()));
 		System.out.println(Arrays.toString(u.getClass().getDeclaredAnnotations()));
-		ORM.createTable(User.class);
+		/*ORM.createTable(User.class);
 		u.roles = null;
 		u = (User) ORM.save(u);
 		System.out.println(u);

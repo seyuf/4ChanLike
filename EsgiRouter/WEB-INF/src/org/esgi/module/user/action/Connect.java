@@ -18,12 +18,12 @@ public class Connect extends AbstractAction{
 	public void execute(IContext context) throws Exception {
 		
 		System.out.println(context.getRequest().getParameter("login"));
-		ORM.createTable(User.class);
+		//ORM.createTable(User.class);
 		User toto = new User();
-		toto.roles = null;
+		/*toto.roles = null;
 	    toto.login = (context.getRequest().getParameter("login"));
 	    toto.password = context.getRequest().getParameter("password");
-	    System.out.println( ORM.save(toto));
+	    System.out.println( ORM.save(toto));*/
 		
 	}
 }

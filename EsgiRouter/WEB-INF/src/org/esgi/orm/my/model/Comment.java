@@ -56,5 +56,20 @@ public class Comment implements IComment {
 	public void setFile(IFile file) {
 		this.fileID = file;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof Comment) {
+			if (super.equals(obj)) {
+				return true;
+			} else {
+				Comment comment = (Comment) obj;
+				if (comment.commentId == this.commentId) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 
 }

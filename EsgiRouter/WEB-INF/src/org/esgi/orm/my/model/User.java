@@ -48,4 +48,19 @@ public class User implements IUser {
 	public String toString() {
 		return "User [id=" + userId + ", mail=" + userMail + ", pseudo=" + userPseudo+"]";
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof User) {
+			if (super.equals(obj)) {
+				return true;
+			} else {
+				User user = (User) obj;
+				if (user.userId == this.userId) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 }
