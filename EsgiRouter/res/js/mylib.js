@@ -3,7 +3,7 @@ var global = this,
 
        global.Esgi = {};
        global.Esgi.html = {};
-
+      
 
 
 ///
@@ -17,23 +17,21 @@ var global = this,
     */
     global.Esgi.html.Form = function(cfg) {
       var me = this;
+      
        me.cfg = cfg;
        me.render();
-       me.initInputs();
-       
-       
-       me.submit = $("<a class=\"btn btn-success\">send</a>");
-       $(me.cfg.renderTo).append(me.submit);
-       me.submit.on('click', function(e){me.onButtonClick(e)});
+       me.initInputs(me);
     };
 
     global.Esgi.html.Form.prototype = {
-         initInputs : function(){
+    
+      initInputs : function(curForm){
               var me = this;
               me._inputs = {};
               $.each(this.cfg.inputs, function(idx, item) {
                 item.renderTo = me.el;
-                me._inputs[item.name] = new Esgi.html.inputs[item.type](item);            
+                me._inputs[item.name] = new Esgi.html.inputs[item.type](item, curForm);     
+               
               });
       },
       addInput : function(input) {
@@ -42,18 +40,17 @@ var global = this,
       },
       render : function(){
         this.el = $("<form class='form-horizontal' role='form'/>");
-         $(this.cfg.renderTo).append(this.el)
+         $(this.cfg.renderTo).append(this.el);
+        
       },
       onButtonClick : function(e) {
+    	  console.log(e);
           var me = this, data = {};
-          //console.log(me._inputs);
+    
           $.each(me._inputs, function(key, item) {
-            //data[key] = item.getValue();
-              data[key] = item.getValue($("[name="+key+"]").val());
-
-            console.log($("[name="+key+"]").val());
-            	
-          });
+            data[key] = item.getValue();
+          })
+          
           $.ajax({
             url : me.cfg.url,
             method : 'POST',
@@ -62,8 +59,9 @@ var global = this,
               alert('NICE');
             }
 
-          })
+          });
           e.preventDefault();
+          
           return false;
       }
 
@@ -74,11 +72,16 @@ var global = this,
 //
      var commons = {
           init : function(){
+        	  
               var me = this;
               $(me.cfg.renderTo).append(me.el);
+             
           },
           getValue : function(){
-              return $(this.el).val();
+              return $(this.el).find(":input").val();
+          },
+          getElement: function(){
+                  return $(this.el).find("a");
           }
      };
 
@@ -120,7 +123,7 @@ var global = this,
     Esgi.html.inputs.File = function(cfg){
         var me = this;
         me.cfg = cfg;
-        var input = $("<input type='file'/>");
+        var input = $("<input name='"+cfg.name+"'type='file'/>");
         var col1 = $("<div class='col-sm-4'/>").append(input);
         var label = $("<label class='control-label col-sm-1'>File</label>");
         me.el = $("<div class='form-group form-group-sm'/>").append(label);
@@ -161,15 +164,17 @@ var global = this,
       Esgi.html.inputs.Email.prototype = commons;
       
       //validate button
-      Esgi.html.inputs.Button = function(cfg){
+      Esgi.html.inputs.Button = function(cfg, parentCon){
           var me = this;
          me.cfg = cfg;         
-         var input = $("<button class='btn btn-default'>"+cfg.label+" </button>");
-         var col1 = $("<div class='col-sm-offset-1 col-sm-4'/>").append(input);
+         var inputS = $("<a class='btn btn-default'>"+cfg.label+" </a>");
+         var col1 = $("<div class='col-sm-offset-1 col-sm-4'/>").append(inputS);
          me.el = $("<div class='form-group form-group-sm'/>").append(col1);
+         inputS.on('click', function(e){parentCon.onButtonClick(e)});
          this.init();
-         //$(me.cfg.renderTo).append(me.el);
-         me.el.on('click', function(e){global.Esgi.html.Form.me.onButtonClick(e)});
+         
+
+         
           
       };
       Esgi.html.inputs.Button.prototype = commons;
