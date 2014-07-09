@@ -1,3 +1,36 @@
-<div>
-HEADER
+<div class="page-header">
+
+<nav class="navbar navbar-inverse" role="navigation">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar">dde</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">Brand</a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+    
+      <ul class="nav navbar-nav">
+        <!-- generate categoies dynamically -->			
+        <li class="active"><a href="#">Categorie1</a></li>
+        <li><a href="#">Categorie2</a></li>
+        <li><a href="#">Categorie3</a></li>
+        <li><a href="#">Categorie4</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+ 		<form class="navbar-form navbar-left" role="search">
+  			<div class="form-group">
+    			<input type="text" class="form-control" placeholder="Category">
+  			</div>
+  			<button type="submit" class="btn btn-default">search</button>
+	 	</form>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
 </div>

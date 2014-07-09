@@ -4,6 +4,9 @@
 </div>
 
 
-#set ($js = $context.getProperties().getProperty("serverRoot")+"/res/js/user/connect.js")
+
+#set ($js = $context.getProperties().getProperty("serverRoot")+"/res/js/4shan/addComment.js")
 $context.setJsDependency($js)
-$context.addOnJsReady("new Esgi.module.user.Connect({ id : '#container'})")
+$context.addOnJsReady("new Esgi.module.user.Comment({ id : '#container'})")
+
+

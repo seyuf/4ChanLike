@@ -40,7 +40,7 @@ public class ORM implements IORM {
 		this.host = "localhost";
 		this.port = 3306;
 		this.login = "root";
-		this.mdp = "";
+		this.mdp = "mamama";
 		this.createTable = new HashMap<>();
 	}
 	
@@ -90,17 +90,17 @@ public class ORM implements IORM {
 					this._createTable(listClass);
 					String listValue = fields[i].getAnnotation(ORM_RELATION.class).value();
 					if (listValue.equals("oneToOne")) {
-						/* relation 1..1, un users ne possède qu'un rôle et un rôle ne 
-						 * peut être lié qu'à un user. On aura donc une clé étrangère 
-						 * dans la table user qui sera lié à un id unique de la table role */
+						/* relation 1..1, un users ne possï¿½de qu'un rï¿½le et un rï¿½le ne 
+						 * peut ï¿½tre liï¿½ qu'ï¿½ un user. On aura donc une clï¿½ ï¿½trangï¿½re 
+						 * dans la table user qui sera liï¿½ ï¿½ un id unique de la table role */
 						sql += fields[i].getName() + " " + this.getFieldTypeByClass(this.getPrimaryField(listClass.getDeclaredFields())) + " UNIQUE NOT NULL";
 						if (i < fields.length -1) {
 							sql += ",";
 						}
 					} else if (listValue.equals("oneToMany")) {
-						/* relation 1..*, un users possède plusieurs rôle et un rôle ne 
-						 * peut être lié qu'à un user. On aura donc une clé étrangère 
-						 * dans la table rôle qui sera lié à un id de la table user */
+						/* relation 1..*, un users possï¿½de plusieurs rï¿½le et un rï¿½le ne 
+						 * peut ï¿½tre liï¿½ qu'ï¿½ un user. On aura donc une clï¿½ ï¿½trangï¿½re 
+						 * dans la table rï¿½le qui sera liï¿½ ï¿½ un id de la table user */
 						if (i == fields.length -1) {
 							sql = sql.substring(0, sql.length()-1);
 						}
@@ -115,17 +115,17 @@ public class ORM implements IORM {
 				            e.printStackTrace();
 				        }
 					} else if (listValue.equals("manyToOne")) {
-						/* relation *..1, un users ne possède qu'un rôle et un rôle 
-						 * peut être lié à plusieurs user. On aura donc une clé étrangère 
-						 * dans la table user qui sera lié à un id de la table role */
+						/* relation *..1, un users ne possï¿½de qu'un rï¿½le et un rï¿½le 
+						 * peut ï¿½tre liï¿½ ï¿½ plusieurs user. On aura donc une clï¿½ ï¿½trangï¿½re 
+						 * dans la table user qui sera liï¿½ ï¿½ un id de la table role */
 						sql += fields[i].getName() + " " + this.getFieldTypeByClass(this.getPrimaryField(listClass.getDeclaredFields())) + " NOT NULL";
 						if (i < fields.length -1) {
 							sql += ",";
 						}
 					} else {
-						/* relation *..*, un users possède plusieurs rôle et un rôle 
-						 * peut être lié à plusieurs user. On aura donc une table association
-						 * qui contiendra un id de user et un id de rôle */
+						/* relation *..*, un users possï¿½de plusieurs rï¿½le et un rï¿½le 
+						 * peut ï¿½tre liï¿½ ï¿½ plusieurs user. On aura donc une table association
+						 * qui contiendra un id de user et un id de rï¿½le */
 						if (i == fields.length -1) {
 							sql = sql.substring(0, sql.length()-1);
 						}

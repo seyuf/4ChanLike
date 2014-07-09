@@ -169,7 +169,7 @@ public class Context implements IContext {
 	@Override
 	public String setInlineCSS(String cssRule) {
 		// TODO Auto-generated method stub
-		return null;
+		return "style=\""+ cssRule+"\"";
 	}
 
 	@Override

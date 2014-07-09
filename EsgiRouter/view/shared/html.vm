@@ -1,15 +1,16 @@
+<!DOCTYPE HTML>
 <html>
    <head>
      <title>toto</title>
      $context.setCssDependency("css")
      <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
    </head>
-   <body>
+   <body class="container">
     $context.getFragment("shared/main_header")
     $context.getFragment("__CURRENT__")
     $context.getFragment("shared/main_footer")
 
-<script>
+	<script>
      var APP_CONTEXT = '$context.getProperties().get("serverRoot")';
    </script> 
    
@@ -22,15 +23,18 @@
 
 
    <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
-    <script src="$context.getProperties().get("serverRoot")/res/js/mylib.js"></script>
-$context.getJsUrls()
-    #foreach($jsUrl in $context.getJsUrls())
-		<script type="text/javascript" src="$jsUrl"></script>
-	#end
+   <script src="$context.getProperties().get("serverRoot")/res/js/mylib.js"></script>
+  
+   						
+   #foreach($jsUrl in $context.getJsUrls())
+	 <script type="text/javascript" src="$jsUrl"></script>
+   #end
+   
 
 <script>
 $(function(){
-	console.log('Im ready');    
+	console.log('Im ready'); 
+	   
     #foreach($jsUrl in $context.getOnJsReady())
 		$jsUrl
 	#end
