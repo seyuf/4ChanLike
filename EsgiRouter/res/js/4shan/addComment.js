@@ -5,7 +5,7 @@ Esgi.module.user = Esgi.module.user || {}
 
 Esgi.module.user.Comment = function (cfg) {
         new Esgi.html.Form({
-             url : APP_CONTEXT+'/comment/subject',
+             url : APP_CONTEXT+'/user/connect',
              renderTo : cfg.id,
              inputs : [
                {

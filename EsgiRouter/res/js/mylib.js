@@ -79,10 +79,7 @@ var global = this,
           },
           getValue : function(){
               return $(this.el).find(":input").val();
-          },
-          getElement: function(){
-                  return $(this.el).find("a");
-          }
+          }  
      };
 
     Esgi.html.inputs = {};
@@ -116,7 +113,6 @@ var global = this,
        me.el = $("<select/>");
        me.init();
     };
-    
     Esgi.html.inputs.Select.prototype = commons;
     
     // file input
@@ -131,7 +127,6 @@ var global = this,
         this.init();
         
      };
-     
      Esgi.html.inputs.File.prototype = commons;
      
      // textarea
@@ -171,30 +166,14 @@ var global = this,
          var col1 = $("<div class='col-sm-offset-1 col-sm-4'/>").append(inputS);
          me.el = $("<div class='form-group form-group-sm'/>").append(col1);
          inputS.on('click', function(e){parentCon.onButtonClick(e)});
-         this.init();
-         
-
-         
-          
+         this.init(); 
       };
       Esgi.html.inputs.Button.prototype = commons;
-
-    
-    
 
 }
 
 $(loadMyLib);
 
-$(document).ready(function(){
-	$('.nav li').click(function(event){
-		$('.nav li.active').removeClass('active');
-		
-		$(this).addClass('active');
-		console.log('in my function');
-		//event.preventDefault();
-		
-	});
-});
+
 
 
