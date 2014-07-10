@@ -41,7 +41,7 @@ public class User implements IUser {
 
 	@Override
 	public void setPseudo(String pseudo) {
-		this.userMail = pseudo;
+		this.userPseudo = pseudo;
 	}
 	
 	@Override
