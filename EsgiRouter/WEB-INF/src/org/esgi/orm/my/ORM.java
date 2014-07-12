@@ -31,6 +31,7 @@ public class ORM implements IORM {
 	private String host, login, mdp;
 	private int port;
 	private Map<Class, Boolean> createTable;
+	public int createT; 
 	
 	static {
 		instance = new ORM();
@@ -42,21 +43,27 @@ public class ORM implements IORM {
 		this.login = "root";
 		this.mdp = "mamama";
 		this.createTable = new HashMap<>();
+		this.createT = 0;
 	}
 	
 	public static Object save(Object o) {
+		try{
 		return instance._save(o);
+		}catch(Exception e){
+            System.out.println("create table saving"+e.getMessage());
+            return null;
+		}
 	}
 
-	public static Object load(Class clazz, Object id) {
+	public static Object load(Class<Object> clazz, Object id) {
 		return instance._load(clazz, id);
 	}
 
-	public static boolean remove(Class clazz, Object id) {
+	public static boolean remove(Class<Object> clazz, Object id) {
 		return instance._remove(clazz, id);
 	}
 
-	public static List<Object> find(Class clazz, String[] projection, Map<String, Object> where, String[] orderby, Integer limit, Integer offset) {
+	public static List<Object> find(Class<Object> clazz, String[] projection, Map<String, Object> where, String[] orderby, Integer limit, Integer offset) {
 		return instance._find(clazz, projection, where, orderby, limit, offset);
 	}
 	
@@ -76,10 +83,18 @@ public class ORM implements IORM {
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
+		try{
+			System.out.println("table to create"+ clazz);
 		this._createTable(clazz);
+		}catch(Exception e){
+            System.out.println("create table Exception database func"+e.getMessage());
+            System.exit(0);
+
+		}
 	}
 	
 	public void _createTable(Class<Object> clazz) {
+		//if(this.createTable.get(clazz) == null ) return;
 		if (this.createTable.get(clazz) == null || !this.createTable.get(clazz)) {
 			String tableName = this.getTableName(clazz);
 			String sql = "CREATE TABLE " + tableName + " (";
@@ -87,45 +102,62 @@ public class ORM implements IORM {
 			for (int i = 0 ; i < fields.length ; i++) {
 				if (fields[i].isAnnotationPresent(ORM_RELATION.class)) {
 					Class listClass = this.getListClass(fields[i]);
-					this._createTable(listClass);
+					try{
+
+						//System.out.println("creating table"+listClass);
+						//System.exit(0);
+						this.createT++;
+						if(listClass == null){
+							System.out.println("listclas is "+ listClass+ "class is"+ clazz);
+							System.exit(0);
+							return;
+						}
+						
+						//this._createTable(listClass);
+						//return;
+						
+						//if(this.createT == 3)
+							//return;
+						
+
+					}catch(Throwable e){
+						System.out.println("Exception failed to create "+e.getMessage());
+						e.printStackTrace();
+
+						//System.out.println("memory"+Runtime.getRuntime().totalMemory()+"free"+ Runtime.getRuntime().freeMemory());
+
+						System.exit(0);
+					}
 					String listValue = fields[i].getAnnotation(ORM_RELATION.class).value();
 					if (listValue.equals("oneToOne")) {
-						/* relation 1..1, un users ne poss�de qu'un r�le et un r�le ne 
-						 * peut �tre li� qu'� un user. On aura donc une cl� �trang�re 
-						 * dans la table user qui sera li� � un id unique de la table role */
+						/* relation 1..1,  */
 						sql += fields[i].getName() + " " + this.getFieldTypeByClass(this.getPrimaryField(listClass.getDeclaredFields())) + " UNIQUE NOT NULL";
 						if (i < fields.length -1) {
 							sql += ",";
 						}
 					} else if (listValue.equals("oneToMany")) {
-						/* relation 1..*, un users poss�de plusieurs r�le et un r�le ne 
-						 * peut �tre li� qu'� un user. On aura donc une cl� �trang�re 
-						 * dans la table r�le qui sera li� � un id de la table user */
+						/* relation 1..*,  */
 						if (i == fields.length -1) {
 							sql = sql.substring(0, sql.length()-1);
 						}
 						Field primaryField1 = this.getPrimaryField(fields);
 						String alterTable = "ALTER TABLE " + this.getTableName(listClass) + " ADD " + 
-						primaryField1.getName() + "_" + tableName + " " + this.getFieldTypeByClass(primaryField1);
+								primaryField1.getName() + "_" + tableName + " " + this.getFieldTypeByClass(primaryField1);
 						try {
-				            PreparedStatement prepare = connectionMySQL.prepareStatement(alterTable);
-				            prepare.execute();
-				            prepare.close();
-				        } catch (Exception e) {
-				            e.printStackTrace();
-				        }
+							PreparedStatement prepare = connectionMySQL.prepareStatement(alterTable);
+							prepare.execute();
+							prepare.close();
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
 					} else if (listValue.equals("manyToOne")) {
-						/* relation *..1, un users ne poss�de qu'un r�le et un r�le 
-						 * peut �tre li� � plusieurs user. On aura donc une cl� �trang�re 
-						 * dans la table user qui sera li� � un id de la table role */
-						sql += fields[i].getName() + " " + this.getFieldTypeByClass(this.getPrimaryField(listClass.getDeclaredFields())) + " NOT NULL";
+						/* relation *..1 */
+						sql += fields[i].getName() + " " + this.getFieldTypeByClass(this.getPrimaryField(listClass.getDeclaredFields())) ;
 						if (i < fields.length -1) {
 							sql += ",";
 						}
 					} else {
-						/* relation *..*, un users poss�de plusieurs r�le et un r�le 
-						 * peut �tre li� � plusieurs user. On aura donc une table association
-						 * qui contiendra un id de user et un id de r�le */
+						/* relation *..* */
 						if (i == fields.length -1) {
 							sql = sql.substring(0, sql.length()-1);
 						}
@@ -135,13 +167,14 @@ public class ORM implements IORM {
 						createAssocTable += primaryField1.getName() + "_" + tableName  + " " + this.getFieldTypeByClass(primaryField1) + ",";
 						createAssocTable += primaryField2.getName() + "_" + this.getTableName(listClass) + " " + this.getFieldTypeByClass(primaryField2);
 						createAssocTable += ")";
+						createAssocTable += " ENGINE=InnoDB";
 						try {
-				            PreparedStatement prepare = connectionMySQL.prepareStatement(createAssocTable);
-				            prepare.execute();
-				            prepare.close();
-				        } catch (Exception e) {
-				            e.printStackTrace();
-				        }
+							PreparedStatement prepare = connectionMySQL.prepareStatement(createAssocTable);
+							prepare.execute();
+							prepare.close();
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
 					}
 				} else {
 					sql += fields[i].getName() + " " + this.getFieldTypeByClass(fields[i]);
@@ -161,24 +194,32 @@ public class ORM implements IORM {
 			}
 			sql += ")";
 			try {
-	            PreparedStatement prepare = connectionMySQL.prepareStatement(sql);
-	            prepare.execute();
-	            prepare.close();
-	            this.createTable.put(clazz, true);
-	            System.out.println("create table : " + tableName);
-	            for (int i = 0 ; i < fields.length ; i++) {
-	            	if (fields[i].isAnnotationPresent(ORM_CLASSNAME.class) && 
-	            		(fields[i].getAnnotation(ORM_RELATION.class).value().equals("oneToOne") ||
-	            		fields[i].getAnnotation(ORM_RELATION.class).value().equals("manyToOne")		)) {
-	            		this.addForeignKey(tableName, fields[i], this.getTableName(this.getListClass(fields[i])), this.getPrimaryField(this.getListClass(fields[i]).getDeclaredFields()));
-	            	}
-	            }
-	        } catch (Exception e) {
-	            e.printStackTrace();
-	        }
+				PreparedStatement prepare = connectionMySQL.prepareStatement(sql);
+				try{
+					prepare.execute();
+					System.out.println("prepared statement is "+prepare);
+				}catch(Exception e){
+					System.out.println("Orm Exception"+e.getMessage()+prepare);
+				}
+				prepare.close();
+				this.createTable.put(clazz, true);
+				System.out.println("create table : " + tableName);
+				for (int i = 0 ; i < fields.length ; i++) {
+					if (fields[i].isAnnotationPresent(ORM_CLASSNAME.class) && 
+							(fields[i].getAnnotation(ORM_RELATION.class).value().equals("oneToOne") ||
+									fields[i].getAnnotation(ORM_RELATION.class).value().equals("manyToOne")		)) {
+						this.addForeignKey(tableName, fields[i], this.getTableName(this.getListClass(fields[i])), this.getPrimaryField(this.getListClass(fields[i]).getDeclaredFields()));
+					}
+				}
+			} catch (Exception e) {
+
+				System.out.println("onetone or manytoone "+e.getMessage());
+				e.printStackTrace();
+			}
 		}
+		System.out.println("CREATE"+clazz);
 	}
-	
+
 	@Override
 	public Object _load(Class clazz, Object id) {
 		this.connectToDatabase(clazz);
@@ -199,7 +240,7 @@ public class ORM implements IORM {
 			try {
 		        PreparedStatement prepare = connectionMySQL.prepareStatement(sql);
 		        this.addPreparedIdField(prepare, 1, id);
-		        
+		        System.out.println("Loading..."+prepare);
 		        ResultSet result = prepare.executeQuery();
 		        Field[] fields = o.getClass().getDeclaredFields();
 		        if (result.next()) {
@@ -304,7 +345,12 @@ public class ORM implements IORM {
 
 	@Override
 	public Object _save(Object o) {
+		try{
 		this.connectToDatabase((Class<Object>)o.getClass());
+		}catch(Exception e){
+            System.out.println("connect to database Exception"+e.getMessage());
+
+		}
 		Field[] fields = o.getClass().getDeclaredFields();
 		Field idField = this.getPrimaryField(fields);
 		String tableName = this.getTableName((Class<Object>)o.getClass());
@@ -355,7 +401,12 @@ public class ORM implements IORM {
 					indice++;
 				}
 			}
-	        prepare.execute();
+			try{
+				prepare.execute();
+				System.out.println("prepared statement is "+prepare);
+			}catch(Exception e){
+				System.out.println("Orm Exception"+e.getMessage()+prepare);
+			}
 	        ResultSet rs = prepare.getGeneratedKeys();
 	        if (rs.next()){
 	            o.getClass().getField(this.getPrimaryField(fields).getName()).set(o, rs.getInt(1));
@@ -363,6 +414,8 @@ public class ORM implements IORM {
 	        prepare.close();
 		} catch (Exception e) {
             e.printStackTrace();
+            System.out.println("Orm Exception"+e.getMessage());
+
         }
 		for (int i = 0 ; i < fields.length ; i++) {
 			if (fields[i].isAnnotationPresent(ORM_RELATION.class)) {
@@ -416,10 +469,12 @@ public class ORM implements IORM {
 			}
 			this.addPreparedField(prepare, indice, field, o);
 			System.out.println(updateRequest);
+			System.out.println(prepare);
 	        prepare.execute();
 	        prepare.close();
 		} catch (Exception e) {
             e.printStackTrace();
+            System.out.println("Alter exception update"+e.getMessage());
         }
 		for (int i = 0 ; i < fields.length ; i++) {
 			if (fields[i].isAnnotationPresent(ORM_RELATION.class)) {
@@ -437,8 +492,13 @@ public class ORM implements IORM {
 	
 	private Field getPrimaryField (Field[] fields) {
 		for (int i = 0 ; i < fields.length ; i++) {
+			try{
 			if (fields[i].isAnnotationPresent(ORM_PK.class)) {
 				return fields[i];
+			}
+			}catch(Exception e){
+				System.out.println("getprimary key Xcption"+e.getMessage());
+				System.exit(0);
 			}
 		}
 		return null;
@@ -467,8 +527,12 @@ public class ORM implements IORM {
 	}
 	
 	private void addPreparedField (PreparedStatement prepare, int indice, Field field, Object o) {
+		System.out.println("Field prepared"+field+"obj"+0+"req"+prepare);
+		
 		try {
+			
 			if (field.getType().equals(Integer.class)) {
+				
 				prepare.setInt(indice, (int)this.getFieldValue(field, o));
 			} else if (field.getType().equals(String.class)) {
 				prepare.setString(indice, (String)this.getFieldValue(field, o));
@@ -481,7 +545,10 @@ public class ORM implements IORM {
 		        }
 			}
 		} catch (Exception e) {
+            
+            System.out.println("Insert Exception "+e.getMessage());
             e.printStackTrace();
+            System.exit(0);
         }
 	}
 	
@@ -697,10 +764,15 @@ public class ORM implements IORM {
 		System.out.println("foreign key : " + sql);
 		try {
             PreparedStatement prepare = connectionMySQL.prepareStatement(sql);
-            prepare.execute();
+            
+			System.out.println("prepared statement is "+prepare);
+			prepare.execute();
+			
             prepare.close();
         } catch (Exception e) {
+			System.out.println("Orm Exception is"+e.getMessage());
             e.printStackTrace();
+
         }
 	}
 

@@ -3,6 +3,7 @@ package org.esgi.module.user.action;
 import java.sql.Date;
 
 import org.esgi.orm.my.ORM;
+import org.esgi.orm.my.model.File;
 import org.esgi.orm.my.model.User;
 import org.esgi.orm.my.model.Comment;
 import org.esgi.orm.my.model.Subject;
@@ -21,41 +22,77 @@ public class Connect extends AbstractAction{
 	@Override
 	public void execute(IContext context) throws Exception {
 		
-		System.out.println(context.getRequest().getParameter("login"));
+		//System.out.println(context.getRequest().getParameter("login"));
 		//ORM.createTable(User.class);
-		User toto = new User();
-		Comment com = new Comment();
-		Subject sub = new Subject();
 		
+		Subject sub = new Subject();
+		sub.subjectID = 1;
+		sub = (Subject) ORM.load((Class<Object>)(Object)sub.getClass(), sub.getId());
+		
+		System.out.println("titre sujet"+sub.getName());
+		
+		/*
+		User toto = new User();
 		toto.setPseudo(context.getRequest().getParameter("pseudo"));
-		//toto.userPseudo = context.getRequest().getParameter("pseudo");
-		System.out.println("request pseudo!!!!!!!"+context.getRequest().getParameter("pseudo"));
 		toto.setMail(context.getRequest().getParameter("email"));
 		try{
 		System.out.println( ORM.save(toto) );
 		}catch(Exception e){
 			System.out.println("User exception"+e.getMessage());
+			System.exit(0);
+
 		}
 		
-		System.out.println("user id is:"+toto.getId());
-		
-		sub.setName("toto");
+		//System.out.println("user id is:"+toto.getId());
+		Subject sub = new Subject();
+		sub.setName("subject1");
+		sub.subjectID = 1;
 		sub.setDate(Date.valueOf("2014-07-09")); 
 		sub.userId = toto;
 		try{
 		System.out.println( ORM.save(sub));
 		}catch(Exception e){
 			System.out.println("subject exception"+e.getMessage());
+			System.exit(0);
 		}
-
 		
-		com.setContent(context.getRequest().getParameter("comment"));
-		com.addSubject(sub);
+		//System.out.println("user id is:"+sub.getId());
+
+		//Thread.sleep(1000);
+
+		Comment com = new Comment();
+		com.setContent(context.getRequest().getParameter("comment"));	
 		try{
-		System.out.println( ORM.save(com));
-		}catch(Exception e){
-			System.out.println("comment Exception"+e.getMessage());
-		}
+			System.out.println( ORM.save(com));
+			}catch(Exception e){
+				System.out.println("comment Exception"+e.getMessage());
+				System.exit(0);
+			}
+		File testFile =  new File();
+		testFile.setPath("/dkkde");
+		testFile.commentId = com;
+
+		try{
+			System.out.println( ORM.save(testFile));
+			}catch(Exception e){
+				System.out.println("subject exception"+e.getMessage());
+				System.exit(0);
+
+			}
+
+		//System.out.println("=================================>"+"comment id"+sub.getId()+" "+com.getId()+"fileId"+testFile.getId());
+		com.addSubject(sub);
+		com.setFile(testFile);
+		
+		try{
+			System.out.println( ORM.save(com));
+			}catch(Exception e){
+				System.out.println("comment Exception"+e.getMessage());
+				System.exit(0);
+
+			}
+		
+		
 
 		
 		//System.out.println( ORM.save(toto));

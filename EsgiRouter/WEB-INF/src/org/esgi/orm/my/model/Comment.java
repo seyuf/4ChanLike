@@ -1,8 +1,10 @@
 package org.esgi.orm.my.model;
 
+import org.esgi.orm.my.annotations.ORM_CLASSNAME;
 import org.esgi.orm.my.annotations.ORM_EXTRA;
 import org.esgi.orm.my.annotations.ORM_FIELD;
 import org.esgi.orm.my.annotations.ORM_PK;
+import org.esgi.orm.my.annotations.ORM_RELATION;
 import org.esgi.orm.my.annotations.ORM_SCHEMA;
 import org.esgi.orm.my.annotations.ORM_TABLE;
 import org.esgi.orm.my.interfaces.IComment;
@@ -19,9 +21,19 @@ public class Comment implements IComment {
 	public Integer commentId;
 	@ORM_FIELD("TEXT")
 	public String commentContent;
+	@ORM_FIELD("int")
+	@ORM_RELATION("manyToOne")
+	@ORM_CLASSNAME("org.esgi.orm.my.model.Subject")
 	public ISubject subjectID;
+	@ORM_FIELD("int")
+	//@ORM_RELATION("manyToOne")
+	//@ORM_RELATION("oneToMany")
+	//@ORM_RELATION("manyToMany")
+	//@ORM_RELATION("oneToOne")
+	@ORM_RELATION("manyToOne")
+	@ORM_CLASSNAME("org.esgi.orm.my.model.File")
 	public IFile fileID;
-
+	
 	@Override
 	public int getId() {
 		return this.commentId;
