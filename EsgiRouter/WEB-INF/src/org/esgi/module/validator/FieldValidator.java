@@ -2,188 +2,199 @@ package org.esgi.module.validator;
 import java.util.regex.*;
 import java.text.*;
 
-/** 
- * FieldValidator contient les méthodes qui valident les champs (login, mdp, email, etc...)
- */
+/* ================================================================ *
+ *                        FIELD VALIDATOR                           * 
+ * Cette classe contient les methodes qui valident les champs       *
+ * (login, mdp, email, logueur max, longueur min, etc...)           *
+ * 																	*
+ * nombre de methodes : 11											*
+ * 																	*
+ * ================================================================ */
 public class FieldValidator
 {
 	
+	/* ================================================================ *
+	 *                        VALIDATE EMPTY                            * 
+	 *     valide que la chaine de caractere n'est pas vide ou NULL.    *
+	 * ================================================================ */	 
 	public boolean validateEmpty(String str)
 	{
-		/**
-		 * valide que la chaîne de caractère n'est pas vide ou NULL.
-		 */
-		if(str != null && !str.isEmpty()) { 
+		if(str != null && !str.isEmpty())
+		{ 
 			return true;
 		}
-		else {
+		else
+		{
 			return false;
 		}
 	}
 	
+	/* ================================================================ *
+	 *                        VALIDATE NUMBERS                          * 
+	 *     valide que la chaine de caractere contient au moins 1 nbr    *
+	 * ================================================================ */
 	public boolean validateNumbers(String str)
 	{
-		/**
-		 * valide que la chaîne de caractère contient au moins un nombre.
-		 */
-		if(str.matches(".*\\d.*")) {
+		if(str.matches(".*\\d.*"))
+		{
 			return true;
-		} else{
+		}
+		else
+		{
 			return false;
 		}
 	}
-	
+
+	/* ================================================================ *
+	 *                        VALIDATE SPACES                           * 
+	 *    valide que la chaine de caractere ne contient aucun espace.   *
+	 * ================================================================ */
 	public boolean validateSpaces(String str)
 	{
-		/**
-		 * valide que la chaîne de caractère ne contient aucun espace.
-		 */
-		if (str.matches("^\\s*$")) {
+		if (str.matches("^\\s*$"))
+		{
 			return false;
 		}
-		else {
+		else
+		{
 			return true;
 		}
 	}
 	
+	/* ================================================================ *
+	 *                        VALIDATE LENGTH                           * 
+	 *     valide que chaine = nombre de caracteres passes en param.    *
+	 * ================================================================ */
 	public boolean validateLength(String str)
 	{
-		/**
-		 * valide si la longueur EST EGALE au chiffre passé en param (ex: "validateLength,7").
-		 */
 		String[] splitArray = null;
 		splitArray = str.split(",");
 		
 		if (splitArray[0].length() == Integer.parseInt(splitArray[1]))
+		{
 			return true;
+		}
 		else
+		{
 			return false;
+		}
 	}
-	
-	public boolean validateMinLength(String str)
-	{
-		/**
-		 * valide si la longueur EST SUPERIEURE OU EGALE 
-		 * au chiffre passé en param (ex: "validateMinLength,7").
-		 */
-		String[] splitArray = null;
-		splitArray = str.split(",");
-		
-		if (splitArray[0].length() >= Integer.parseInt(splitArray[1]))
+
+	/* ================================================================ *
+	 *                        VALIDATE MIN LENGTH                       * 
+	 *     valide que la chaine de caractere est superieure au nb       *
+	 *     de caracteres autorises.										*
+	 * ================================================================ */
+	public boolean validateMinLength(String str, int len)
+	{		
+		if (str.length() >= len)
+		{
 			return true;
+		}
 		else
+		{
 			return false;
+		}
 	}
-	
-	public boolean validateMaxLength(String str)
-	{
-		/**
-		 * valide si la longueur EST INFERIEURE OU EGALE 
-		 * au chiffre passé en param (ex: "validateMaxLength,7").
-		 */
-		String[] splitArray = null;
-		splitArray = str.split(",");
-		
-		if (splitArray[0].length() <= Integer.parseInt(splitArray[1]))
+
+	/* ================================================================ *
+	 *                        VALIDATE MAX LENGTH                       * 
+	 *     valide que la chaine de caractere est inferieur ou egal      *
+	 *     au nb de caracteres autorises.								*
+	 * ================================================================ */
+	public boolean validateMaxLength(String str, int len)
+	{	
+		if (str.length() <= len)
+		{
 			return true;
+		}
 		else
+		{
 			return false;
+		}
 	}
-	/*
-	
+
+	/* ================================================================ *
+	 *                        VALIDATE PASSWORD                         * 
+	 *     regles de validation	:									    *
+	 * (?=.*[0-9])     au moins un chiffre								*
+	 * (?=.*[a-z])     au moins une lettre minuscule					*
+	 * (?=.*[A-Z])     au moins une lettre majuscule					*
+	 * (?=.*[@#*=])    au moins un caractere special					*
+	 * (?=[\\S]+$)     aucun espace 									*
+	 * {8,40}          au moins 8 caracteres							*
+	 * ================================================================ */
 	public boolean validatePassword(String str)
-	{
-		** règles pour la validation des mots de passe
-		 * (?=.*[0-9])     au moins un chiffre
-		 * (?=.*[a-z])     au moins une lettre minuscule
-		 * (?=.*[A-Z])     au moins une lettre majuscule
-		 * (?=.*[@#*=])    au moins un caractère spécial
-		 * (?=[\\S]+$)     aucun espace 
-		 *
-	    String pattern = "((?=.*[0-9])(?=.*[a-z]) (?=.*[A-Z])(?=.*[@#*=])(?=[\\S]+$))";
-	    if (str.matches(pattern)) {
-	    	return true;
-	    }
-	    else {
-	    	return false;
-	    }
-	}
-	*/
-	public boolean validatePassword(String str)
-	{
-		/** règles pour la validation des mots de passe
-		 * (?=.*[0-9])     au moins un chiffre
-		 * (?=.*[a-z])     au moins une lettre minuscule
-		 * (?=.*[A-Z])     au moins une lettre majuscule
-		 * (?=.*[@#*=])    au moins un caractère spécial
-		 * (?=[\\S]+$)     aucun espace 
-		 */
-		
-	    Pattern pattern = Pattern.compile("((?=.*[a-z])(?=.*\\d)(?=.*[A-Z])(?=.*[@#$%!]).{8,40})");
-	    //Pattern pattern = Pattern.compile("((?=.*[0-9])(?=.*[a-z]) (?=.*[A-Z])(?=.*[@#*=])(?=[\\S]+$))");
+	{	
+		String password_pattern = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{6,20})";
+	    Pattern pattern = Pattern.compile(password_pattern);
 	    
 	    Matcher matcher = pattern.matcher(str);
 	    return matcher.matches();
 	}
 	
-	
+	/* ================================================================ *
+	 *                        VALIDATE DATE                             * 
+	 *     permet de valider qu'un champ correspond a une date          *
+	 *     multi-format!												*
+	 * ================================================================ */	
 	public boolean validateDate(String str)
 	{
-		/**
-		 * valide si la date est au bon format (multi-format).
-		 */
-		SimpleDateFormat[] possibleFormats = new SimpleDateFormat[] {
+		SimpleDateFormat[] possibleFormats = new SimpleDateFormat[]
+		{
 				new SimpleDateFormat("yyyy-MM-dd"),
 				new SimpleDateFormat("yyyy,MM,dd"),
 				new SimpleDateFormat("yyyyMMdd"),
 				new SimpleDateFormat("dd-MM-yyyy"),
 				new SimpleDateFormat("dd-MM-yy"),
 				new SimpleDateFormat("dd/MM/yyyy"),
-				new SimpleDateFormat("dd/MM/yy")};
+				new SimpleDateFormat("dd/MM/yy")
+		};
 
 		for (SimpleDateFormat format: possibleFormats)
 		{
 			format.setLenient(false);
 		}
-
 		int index = 0;
-		while (index < possibleFormats.length) {
-			try {
+		while (index < possibleFormats.length)
+		{
+			try
+			{
 				possibleFormats[index++].parse(str);
 				return true;
 			} catch (ParseException ex) { /* Rien */ }
 		}
 		return false;
-
 	}
 	
+	/* ================================================================ *
+	 *                        VALIDATE EMAIL                            * 
+	 *     permet de valider si une adresse email est au bon format     *
+	 * ================================================================ */	
 	public boolean validateEmail(String str)
 	{
-		/**
-		 * valide si l'adresse email est correcte.
-		 */
-		
-		String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+		String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,3})$";
 		Pattern pattern = Pattern.compile(EMAIL_PATTERN);
-	 
 		Matcher matcher = pattern.matcher(str);
 		return matcher.matches();
 	}
 	
+	/* ================================================================ *
+	 *                        VALIDATE BOOLEAN                          * 
+	 *     permet de valider qu'une varaible est de type boolean        *
+	 *     true OU false												*
+	 * ================================================================ */
 	public boolean validateBoolean(String str)
 	{
-		/**
-		 * valide si le paramètre est un boolean (true ou false).
-		 */
 		return "true".equals(str) || "false".equals(str);
 	}
 	
-	
+	/* ================================================================ *
+	 *                        VALIDATE DECIMAL                          * 
+	 *     permet de valider si une variable est de type decimal	    *
+	 * ================================================================ */
 	public boolean validateDecimal(String str)
 	{
-		/**
-		 * valide si le paramètre est un décimal.
-		 */
 		try  
 		{  
 			double d = Double.parseDouble(str);  
