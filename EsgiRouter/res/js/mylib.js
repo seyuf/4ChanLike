@@ -22,7 +22,8 @@ var global = this,
        me.render();
        me.initInputs(me);
     };
-
+    
+    
     global.Esgi.html.Form.prototype = {
     
       initInputs : function(curForm){
@@ -39,27 +40,89 @@ var global = this,
 
       },
       render : function(){
-        this.el = $("<form class='form-horizontal' role='form'/>");
+        this.el = $("<form class='form-horizontal' role='form' id='comForm'/>");
          $(this.cfg.renderTo).append(this.el);
         
       },
       onButtonClick : function(e) {
-    	  console.log(e);
+    	  
           var me = this, data = {};
+          var file = {}; 
+          
+          if(this.cfg.subjectId != undefined){
+        	  console.log("sujectId",this.cfg.subjectId );
+        	  data['commentId'] = this.cfg.subjectId;
+          }
     
           $.each(me._inputs, function(key, item) {
             data[key] = item.getValue();
+            if(key == 'image'){
+            	file = item.el;
+            }
           })
           
-          $.ajax({
-            url : me.cfg.url,
-            method : 'POST',
-            data : data,
-            success : function(response) {
-              alert('NICE');
-            }
+          var saveFile = function(){
+        	  var t = new FormData();
+        	  try{
+        		  file  = $(file).find(':input')[0].files[0];
+        		  data['image'] = data['email']+file.name;
+        		  
+        	  }catch (e) {
+        		  console.log("Exception", e);
+        		  find = {};
+        	  }
+        	  file.name = "toto.jpg";
+        	  t.append('file',file,data['email']+file.name);
+        	 
+        	 
 
-          });
+        	  $.ajax({ 
+        		  url : me.cfg. FileUrl,
+        		  type: "POST",
+        		  data:t,
+        		  cache:false,
+        		  processData:false,
+        		  contentType:false,
+        		  success: function( response ) { 
+        			  console.log("url is"+me.cfg.FileUrl);
+        			  console.log("file has been posted", "and response is ",file.name);
+        			  alert('NICE');
+        			  sendData();
+        			 
+        		  },
+        		  error:function(datas, statuts, error){
+        			  console.log("error"+error);
+        		  }
+        	  });
+
+          };
+         
+          
+          var sendData = function(){
+        	  $.ajax({
+        		  url : me.cfg.url,
+        		  method : 'POST',
+        		  data : data,
+
+        		  success : function(response, status) {
+
+        			  //response = JSON.parse(response);
+        			  console.log("response", response.result, response.error);
+        			  response.result.id = "#MainPanel";
+        			  new Esgi.module.user.Panel(response.result);
+
+        		  },
+        		  error: function (data, status, erreur){
+
+        			  console.log("error data",data.getResponseHeader("content-type"));
+        			  console.log("status   ",status,"  cause", erreur);
+        		  }
+
+        	  });
+          };
+          
+          saveFile(sendData);
+          
           e.preventDefault();
           
           return false;
@@ -88,7 +151,7 @@ var global = this,
        me.cfg = cfg;
        var input = $("<input type='text' name='"+cfg.name+"' class='form-control'/>");
        var col1 = $("<div class='col-sm-4'/>").append(input);
-       var label = $("<label class='control-label col-sm-1'>"+cfg.label+"</label>");
+       var label = $("<label class='control-label col-sm-3'>"+cfg.label+"</label>");
        me.el = $("<div class='form-group form-group-sm'/>").append(label);
        me.el = (me.el).append(col1);
        this.init();
@@ -121,7 +184,7 @@ var global = this,
         me.cfg = cfg;
         var input = $("<input name='"+cfg.name+"'type='file'/>");
         var col1 = $("<div class='col-sm-4'/>").append(input);
-        var label = $("<label class='control-label col-sm-1'>File</label>");
+        var label = $("<label class='control-label col-sm-3'>File</label>");
         me.el = $("<div class='form-group form-group-sm'/>").append(label);
         me.el = (me.el).append(col1);
         this.init();
@@ -135,7 +198,7 @@ var global = this,
         me.cfg = cfg;
          var input = $("<textarea  name='"+cfg.name+"' class='form-control' rows='3'>");
          var col1 = $("<div class='col-sm-4'/>").append(input);
-         var label = $("<label class='control-label col-sm-1'>"+cfg.label+"</label>");
+         var label = $("<label class='control-label col-sm-3'>"+cfg.label+"</label>");
          me.el = $("<div class='form-group form-group-sm'/>").append(label);
          me.el = (me.el).append(col1);
          this.init();
@@ -150,7 +213,7 @@ var global = this,
          me.cfg = cfg;         
          var input = $("<input  name='"+cfg.name+"' type='email' class='form-control'/>");
          var col1 = $("<div class='col-sm-4'/>").append(input);
-         var label = $("<label class='control-label col-sm-1'>Email</label>");
+         var label = $("<label class='control-label col-sm-3'>Email</label>");
          me.el = $("<div class='form-group form-group-sm'/>").append(label);
          me.el = (me.el).append(col1);
          

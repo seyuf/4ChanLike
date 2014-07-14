@@ -5,6 +5,7 @@
 	                 },
 	                 
 	                 "__CURRENT__",
+	                 
 	                 { 
 	                	 "shared/main_footer" : ["__CURRENT__"]
 	                 }

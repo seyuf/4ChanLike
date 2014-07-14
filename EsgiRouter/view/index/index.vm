@@ -1,12 +1,80 @@
 
 
-<div id="container">
+<div id="">
 </div>
 
+<div id="">
+</div>
+
+<div class="panel-group" id="MainPanel">
+</div> 
 
 
 #set ($js = $context.getProperties().getProperty("serverRoot")+"/res/js/4shan/addComment.js")
-$context.setJsDependency($js)
-$context.addOnJsReady("new Esgi.module.user.Comment({ id : '#container'})")
+#set ($js1 = $context.getProperties().getProperty("serverRoot")+"/res/js/4shan/subject.js")
+#set ($js2 = $context.getProperties().getProperty("serverRoot")+"/res/js/4shan/Panel.js")
 
+
+$context.setJsDependency($js)
+$context.setJsDependency($js1)
+$context.setJsDependency($js2)
+
+
+
+$context.addOnJsReady("new Esgi.module.user.Subject({ id : '#container-subject'})")
+
+ #foreach($subject in $context.getSubjects())
+	
+   $context.addOnJsReady("new Esgi.module.user.Panel($subject)")		 
+ #end
+   
+
+
+#*
+$context.addOnJsReady("new Esgi.module.user.Panel({ id : '#MainPanel'})")
+*#
+
+<button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+  post a subject
+</button>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
+  <div class="modal-dialog">
+    <div class="modal-content" >
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="myModalLabel">suject Form</h4>
+      </div>
+      <div class="modal-body" id="container-subject">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal2">
+  post a subject
+</button>
+<div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModal2Label" aria-hidden="true" >
+  <div class="modal-dialog">
+    <div class="modal-content" >
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="myModal2Label">suject Form</h4>
+      </div>
+      <div id="container-comment2">
+      </div>	
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" >Close</button>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+
+$context.addOnJsReady("$('#myModal2').on('show.bs.modal',function(e){$('#comForm').remove();console.log('removing form');})");
 

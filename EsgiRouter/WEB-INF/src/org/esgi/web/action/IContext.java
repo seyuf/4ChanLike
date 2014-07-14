@@ -1,5 +1,6 @@
 package org.esgi.web.action;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
@@ -32,7 +33,8 @@ public interface IContext {
 	public void setKeyword(String keyword);
 	public String getKeyword();
 	public String getCssDependency();
-	
+	public List<String> getSubjects() ;
+	public void setSubjects(ArrayList<String> subjectIn ) ;
 	//public String getjsdependency();
 	//public String getinlineCSS(String css);
 	//public String addRawHeader();

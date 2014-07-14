@@ -1,6 +1,8 @@
 package org.esgi.module.file;
 
+import java.io.Console;
 import java.io.File;
+import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 
@@ -10,6 +12,8 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.esgi.web.action.IAction;
 import org.esgi.web.action.IContext;
+
+import com.fasterxml.jackson.databind.util.JSONPObject;
 
 public class FileUpload implements IAction {
 
@@ -43,7 +47,8 @@ public class FileUpload implements IAction {
 				    FileItem item = iter.next();
 
 				    if (!item.isFormField()) {
-				    	File uploadedFile = new File(((String) context.getRequest().getServletContext().getRealPath("/")+"uploaded_files"+"/"+item.getName()));
+				    	File uploadedFile = new File(((String) context.getRequest().getServletContext().getRealPath("/")+"res/img"+"/"+item.getName()));
+				    	
 				        try {
 							item.write(uploadedFile);
 						} catch (Exception e) {
@@ -53,7 +58,14 @@ public class FileUpload implements IAction {
 				}
 			}
 		}
-		context.getResponse().setContentType("text/html");
+		//context.getResponse().setContentType("text/html");
+		//JSONPObject test = new JSONPObject("result", "file have bee, uploaded");
+		String sended = "{result: 'file have been uploaded'}";
+		context.getResponse().setContentType("text/javascript");
+		context.getResponse().setContentLength(sended.length());
+		context.getResponse().getWriter().write(sended);
+	
+		
 		
 	}
 
@@ -65,7 +77,7 @@ public class FileUpload implements IAction {
 	@Override
 	public String getLayout() {
 		// TODO Auto-generated method stub
-		return "file/file_upload.vm" ;
+		return null;
 	}
 
 	@Override

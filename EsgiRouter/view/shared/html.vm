@@ -24,6 +24,8 @@
 
    <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
    <script src="$context.getProperties().get("serverRoot")/res/js/mylib.js"></script>
+    <script src="$context.getProperties().get("serverRoot")/res/js/4shan/mypanellib.js"></script>
+   
   
    						
    #foreach($jsUrl in $context.getJsUrls())
@@ -36,6 +38,7 @@ $(function(){
 	console.log('Im ready'); 
 	   
     #foreach($jsUrl in $context.getOnJsReady())
+    	console.log('Im ready'); 
 		$jsUrl
 	#end
 });

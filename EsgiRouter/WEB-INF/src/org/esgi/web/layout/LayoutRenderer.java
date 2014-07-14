@@ -19,16 +19,30 @@ public class LayoutRenderer {
 		// execute each action according to the dependency tree.
 		// For each each action, if a template exists, execute it with the context action.
 		// And set result in fragment.
-		//List<String> list = new ArrayList<String>();
-	
-		//System.out.println("json"+context.getRequest().getServletContext().getRealPath("/")+"layout/default.js");
+		
+		if(action.getLayout() == null){
+			IAction a = null;
+			
+				a  = router.find(action.getRoute(), context);
+			
+			
+			if (a != null) {
+				try {
+					a.execute(context);
+					
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			return ;
+		}
+		
+		
+		
 		List<String> list = new LinkedList<String>() ;
-		/*
-		list.add("__CURRENT_");
-		list.add("shared/main_footer.vm");
-		list.add("temlates :shared/main_header.vm");
-		list.add("shared/html");
-		*/
+		
+		
 		
 		try {
 			list = JSONExtractorClass.getDependencies(context.getRequest().getServletContext().getRealPath("/")+"layout/default.js");
@@ -76,7 +90,7 @@ public class LayoutRenderer {
 			
 		}
 
-		//System.out.println("Renderer : " + (String)context.getFragment(list.get(list.size()-1)).toString());
+		
 		
 		try {
 			context.getResponse().getWriter().write(context.getFragment(list.get(list.size()-1)).toString());

@@ -22,6 +22,16 @@ public class Context implements IContext {
 	public Map<String, Object> mapAttribut = new HashMap<>();
 	public List<String> onJsReady = new ArrayList<>();
 	public List<String> jsUrls = new ArrayList<>();
+	public List<String> subjectsData = new ArrayList<>();
+	
+	
+	public void setSubjects(ArrayList<String> subjectIn ) {
+		this.subjectsData = subjectIn;
+	}
+	public List<String> getSubjects() {
+		return subjectsData;
+	}
+
 	public Context (HttpServletRequest request, HttpServletResponse response, Properties properties) {
 		this.request = request;
 		this.response = response;

@@ -122,7 +122,7 @@ public class ORM implements IORM {
 
 					}catch(Throwable e){
 						System.out.println("Exception failed to create "+e.getMessage());
-						e.printStackTrace();
+						//e.printStackTrace();
 
 						//System.out.println("memory"+Runtime.getRuntime().totalMemory()+"free"+ Runtime.getRuntime().freeMemory());
 
@@ -148,7 +148,8 @@ public class ORM implements IORM {
 							prepare.execute();
 							prepare.close();
 						} catch (Exception e) {
-							e.printStackTrace();
+							//e.printStackTrace();
+							 System.out.println("ORM Exception"+e.getMessage());
 						}
 					} else if (listValue.equals("manyToOne")) {
 						/* relation *..1 */
@@ -173,7 +174,8 @@ public class ORM implements IORM {
 							prepare.execute();
 							prepare.close();
 						} catch (Exception e) {
-							e.printStackTrace();
+							//e.printStackTrace();
+							 System.out.println("ORM Exception"+e.getMessage());
 						}
 					}
 				} else {
@@ -214,7 +216,7 @@ public class ORM implements IORM {
 			} catch (Exception e) {
 
 				System.out.println("onetone or manytoone "+e.getMessage());
-				e.printStackTrace();
+				//e.printStackTrace();
 			}
 		}
 		System.out.println("CREATE"+clazz);
@@ -261,7 +263,8 @@ public class ORM implements IORM {
 		        }
 		        result.close();
 			} catch (Exception e) {
-	            e.printStackTrace();
+	            //e.printStackTrace();
+	            System.out.println("ORM Exception"+e.getMessage());
 	        }
 		}
 		return o;
@@ -278,12 +281,13 @@ public class ORM implements IORM {
             this.addPreparedIdField(prepare, 1, id);
             prepare.execute();
 		} catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
+            System.out.println("ORM Exception"+e.getMessage());
         }
 		return false;
 	}
 
-	public List<Object> _find(Class clazz, String[] projection, Map<String, Object> where, String[] orderby, Integer limit, Integer offset) {
+	public List<Object> _find(Class<Object> clazz, String[] projection, Map<String, Object> where, String[] orderby, Integer limit, Integer offset) {
 		this.connectToDatabase(clazz);
 		List<Object> list = null;
 		String sql = "SELECT ";
@@ -338,7 +342,8 @@ public class ORM implements IORM {
 	        }
 	        result.close();
 		} catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
+            System.out.println("ORM Exception"+e.getMessage());
         }
 		return list;
 	}
@@ -413,7 +418,7 @@ public class ORM implements IORM {
 	        }
 	        prepare.close();
 		} catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             System.out.println("Orm Exception"+e.getMessage());
 
         }
@@ -473,7 +478,7 @@ public class ORM implements IORM {
 	        prepare.execute();
 	        prepare.close();
 		} catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             System.out.println("Alter exception update"+e.getMessage());
         }
 		for (int i = 0 ; i < fields.length ; i++) {
@@ -541,14 +546,15 @@ public class ORM implements IORM {
 					SimpleDateFormat formater = new SimpleDateFormat("yyyy-MM-dd");
 					prepare.setString(indice, formater.format((Date)this.getFieldValue(field, o)));
 				} catch (Exception e) {
-		            e.printStackTrace();
+		            //e.printStackTrace();
+		            System.out.println("ORM Exception"+e.getMessage());
 		        }
 			}
 		} catch (Exception e) {
             
             System.out.println("Insert Exception "+e.getMessage());
-            e.printStackTrace();
-            System.exit(0);
+            //e.printStackTrace();
+            //System.exit(0);
         }
 	}
 	
@@ -560,7 +566,8 @@ public class ORM implements IORM {
 	        	prepare.setString(1, (String) id);
 	        }
 		} catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
+            System.out.println("ORM Exception"+e.getMessage());
         }
 	}
 	
@@ -570,6 +577,7 @@ public class ORM implements IORM {
 			fieldObject = field.get(o);
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
+			
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		}
@@ -584,7 +592,8 @@ public class ORM implements IORM {
 				field.set(o, result.getString(field.getName()));
 			}
 		} catch (Exception e) {
-	        e.printStackTrace();
+	        //e.printStackTrace();
+	        System.out.println("ORM Exception"+e.getMessage());
 	    }
 	}
 	
@@ -602,6 +611,7 @@ public class ORM implements IORM {
 			
 			where.put(primaryField.getName(), this.getFieldValue(primaryField, o));
 			list = this._find(listClass, projection, where, null, null, null);
+			
 		} else {
 			String tableName = this.getTableName((Class<Object>)o.getClass());
 			String assocTableName = this.getTableName(listClass);
@@ -620,7 +630,8 @@ public class ORM implements IORM {
 		        }
 	            prepare.close();
 	        } catch (Exception e) {
-	            e.printStackTrace();
+	            //e.printStackTrace();
+	            System.out.println("ORM Exception"+e.getMessage());
 	        }
 		}
 		return list;
@@ -674,7 +685,8 @@ public class ORM implements IORM {
 			            prepare.execute();
 			            prepare.close();
 			        } catch (Exception e) {
-			            e.printStackTrace();
+			            //e.printStackTrace();
+			            System.out.println("ORM Exception"+e.getMessage());
 			        }
 				}
 			} catch (IllegalArgumentException e) {
@@ -713,13 +725,15 @@ public class ORM implements IORM {
 	                    deletePrepare.setString(2,  id.toString());
 	                    deletePrepare.execute();
 	        		} catch (Exception e) {
-	                    e.printStackTrace();
+	                   // e.printStackTrace();
+	                    System.out.println("ORM Exception"+e.getMessage());
 	                }
 	        	}
 	        }
 	        result.close();
 		} catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
+            System.out.println("ORM Exception"+e.getMessage());
         }
 	}
 	
@@ -739,7 +753,8 @@ public class ORM implements IORM {
 			        prepare.execute();
 			        prepare.close();
 				} catch (Exception e) {
-		            e.printStackTrace();
+		            //e.printStackTrace();
+		            System.out.println("ORM Exception"+e.getMessage());
 		        }
 			}
 		}
@@ -771,7 +786,7 @@ public class ORM implements IORM {
             prepare.close();
         } catch (Exception e) {
 			System.out.println("Orm Exception is"+e.getMessage());
-            e.printStackTrace();
+            //e.printStackTrace();
 
         }
 	}

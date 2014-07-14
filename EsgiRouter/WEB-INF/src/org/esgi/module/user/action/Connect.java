@@ -1,6 +1,11 @@
 package org.esgi.module.user.action;
 
+import java.io.Console;
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.esgi.orm.my.ORM;
 import org.esgi.orm.my.model.File;
@@ -9,6 +14,7 @@ import org.esgi.orm.my.model.Comment;
 import org.esgi.orm.my.model.Subject;
 import org.esgi.web.action.AbstractAction;
 import org.esgi.web.action.IContext;
+
 
 public class Connect extends AbstractAction{
 	@Override
@@ -22,86 +28,132 @@ public class Connect extends AbstractAction{
 	@Override
 	public void execute(IContext context) throws Exception {
 		
-		//System.out.println(context.getRequest().getParameter("login"));
-		//ORM.createTable(User.class);
-		
-		Subject sub = new Subject();
-		sub.subjectID = 1;
-		sub = (Subject) ORM.load((Class<Object>)(Object)sub.getClass(), sub.getId());
-		
-		System.out.println("titre sujet"+sub.getName());
-		
-		/*
-		User toto = new User();
-		toto.setPseudo(context.getRequest().getParameter("pseudo"));
-		toto.setMail(context.getRequest().getParameter("email"));
-		try{
-		System.out.println( ORM.save(toto) );
-		}catch(Exception e){
-			System.out.println("User exception"+e.getMessage());
-			System.exit(0);
+		String pseudo = context.getRequest().getParameter("pseudo");
+		String email = context.getRequest().getParameter("email");
+		String filePath = context.getRequest().getParameter("image");
+		String subjectName = context.getRequest().getParameter("subject");
+		String comment = context.getRequest().getParameter("comment");
+		String subjectID = context.getRequest().getParameter("commentId");
+		if(subjectID != null){
+			System.out.println("must set comment");
+		}else{
+			String created = this.newSubject(pseudo, email, subjectName, comment, filePath);
+			if(created == null){
+				created = "{\"result\": \"the subject already exist\",\"error\":true}";
+			}else{
+				created = "{\"result\":"+created+", \"error\":false}";
+			}
 
+			context.getResponse().setContentType("application/json");
+			context.getResponse().getWriter().write(created);
+
+			Subject sub = new Subject();
+			sub.subjectID=1;
+			sub = (Subject) ORM.load((Class<Object>)(Object)Subject.class, sub.getId());
+
+			System.out.println("titre sujet"+sub.getId());
+		}
+
+	}
+	
+	
+	
+	private String newSubject(String pseudo, String email, String subjectTitle, String CommentText, String filePath){
+		
+		
+		Subject testSub = (Subject) this.databaseIntegrity((Class<Object>)(Object)Subject.class, "subjectName", subjectTitle);
+		if(testSub != null){
+			return null;
 		}
 		
-		//System.out.println("user id is:"+toto.getId());
+
+		User toto;
+		toto = (User) this.databaseIntegrity((Class<Object>)(Object)User.class, "userMail", email);
+		if(toto == null){
+
+			// set user
+			toto = new User();
+			toto.setPseudo(pseudo);
+			toto.setMail(email);
+			try{
+				ORM.save(toto);
+			}catch(Exception e){
+				System.out.println("Expection while saving user ******"+e.getMessage());
+				System.exit(0);
+
+			}
+		}
+
+		// set subgject
 		Subject sub = new Subject();
-		sub.setName("subject1");
-		sub.subjectID = 1;
-		sub.setDate(Date.valueOf("2014-07-09")); 
+		sub.setName(subjectTitle);
+		java.util.Date now = new java.util.Date();
+		sub.setDate(new java.sql.Date(now.getTime())); 
 		sub.userId = toto;
 		try{
-		System.out.println( ORM.save(sub));
+			System.out.println( ORM.save(sub));
 		}catch(Exception e){
-			System.out.println("subject exception"+e.getMessage());
+			System.out.println("Exception subject *****"+e.getMessage());
+			System.exit(0);
+		}
+
+		// init comment
+		Comment com = new Comment();
+		com.setContent(CommentText);	
+		try{
+			System.out.println( ORM.save(com));
+		}catch(Exception e){
+			System.out.println("Exception comment *****"+e.getMessage());
 			System.exit(0);
 		}
 		
-		//System.out.println("user id is:"+sub.getId());
-
-		//Thread.sleep(1000);
-
-		Comment com = new Comment();
-		com.setContent(context.getRequest().getParameter("comment"));	
-		try{
-			System.out.println( ORM.save(com));
-			}catch(Exception e){
-				System.out.println("comment Exception"+e.getMessage());
-				System.exit(0);
-			}
+		// init file
 		File testFile =  new File();
-		testFile.setPath("/dkkde");
+		testFile.setPath(filePath);
 		testFile.commentId = com;
 
 		try{
 			System.out.println( ORM.save(testFile));
-			}catch(Exception e){
-				System.out.println("subject exception"+e.getMessage());
-				System.exit(0);
+		}catch(Exception e){
+			System.out.println("subject exception"+e.getMessage());
+			System.exit(0);
 
-			}
+		}
 
-		//System.out.println("=================================>"+"comment id"+sub.getId()+" "+com.getId()+"fileId"+testFile.getId());
+		// update comment file and subject field
 		com.addSubject(sub);
 		com.setFile(testFile);
-		
 		try{
 			System.out.println( ORM.save(com));
-			}catch(Exception e){
-				System.out.println("comment Exception"+e.getMessage());
-				System.exit(0);
+		}catch(Exception e){
+			System.out.println("comment Exception"+e.getMessage());
+			System.exit(0);
 
+		}
+
+
+
+		return "{\"subjectName\":\""+sub.subjectName+"\", \"subjectId\":\""+sub.getId()+"\", \"commentId\":\""+com.getId()+"\",\"commentContent\":\""+com.getContent()
+				+"\",\"userName\":\""+toto.getPseudo()+"\",\"filePath\":\""+testFile.getPath()+"\"}";
+	}
+	//tableIn.class
+	private Object databaseIntegrity(Class<Object> tableIn, String field, String value) {
+		
+		try{
+			Map<String, Object> where = new HashMap<>();
+			where.put(field, value);
+			List<Object> checkSub= ORM.find(tableIn,new String[]{"*"}, where, null, null,null);
+			System.out.println("isempty: "+checkSub.isEmpty());
+			if (!checkSub.isEmpty() ){
+				return checkSub.get(0);
 			}
-		
-		
-
-		
-		//System.out.println( ORM.save(toto));
-		//System.out.println( ORM.save(sub));
-
-		/*toto.roles = null;
-	    toto.login = (context.getRequest().getParameter("login"));
-	    toto.password = context.getRequest().getParameter("password");
-	    System.out.println( ORM.save(toto));*/
+			else {
+				return null;
+			}
+		}catch(Exception e){
+			System.out.println("Ex in checking data integrity"+e.getMessage());
+			return null;
+		}
 		
 	}
 }
