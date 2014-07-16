@@ -6,6 +6,7 @@ loadMyLib2 = function(onloaded){
 
 	global2.shan = {};
 	global2.shan.html = {};
+	
 
 	global2.shan.html.panel = function(cfg){
 		var me = this;
@@ -30,10 +31,14 @@ loadMyLib2 = function(onloaded){
 
 			},
 			render : function(){
-			    //this.el = $("<div class='row'></div>");
-			    //this.el = $("<div class='panel-group' id='MainPanel'>");
-			    this.el = $("<div class='panel panel-default'></div");
-			    //this.el = (this.el).append(parentPanel);
+			    
+				
+				if(this.cfg.renderTo == "#MainPanel"){
+					this.el = $("<div class='panel panel-default'></div");
+				}else{
+					this.el = $("<table class='table  table-striped'></table>");
+				}
+			   
 				$(this.cfg.renderTo).append(this.el);
 
 			},
@@ -52,8 +57,12 @@ loadMyLib2 = function(onloaded){
 			init : function(){
 
 				var me = this;
-				$(me.cfg.renderTo).append(me.el1);
-				$(me.cfg.renderTo).append(me.el2);
+				if(me.el1 != undefined){
+					$(me.cfg.renderTo).append(me.el1);
+					$(me.cfg.renderTo).append(me.el2);
+				}else{
+					$(me.cfg.renderTo).append(me.el);
+				}
 				
 
 			},
@@ -66,45 +75,69 @@ loadMyLib2 = function(onloaded){
 
 	shan.html.inputs = {};
 	shan.html.inputs.show = function(cfg){
-		
+
 		var me = this;
-		
+		var sliceCommment = cfg.comment.split("*", 2);
 		me.cfg = cfg;
 		var postCom = function() {
 			new Esgi.module.user.Comment({ id : '#container-comment2'}, cfg.result.subjectId);$('#myModal2').modal('show')
 		};
-		
-		
+
+
 		//me.el = $("<div class='panel panel-default'></div");
-		var createNewSubject =$("<button class='btn btn-success btn-xs pull-right' data-toggle='modal' data-target='#myModal'>post a subject</button>");
-		//var createNewComment =$("<button class='btn btn-danger btn-xs pull-right' data-toggle='modal'  onclick='global.subId = 1;' data-target='#myModal2'>comment</button>");
-		var createNewComment =$("<button class='btn btn-danger btn-xs pull-right' onclick='$(function(){new Esgi.module.user.Comment({ id : \"#container-comment2\"},"+cfg.result.subjectId+");$(\"#myModal2\").modal(\"show\");})'>comment</button>");
+		var createNewSubject =$("<button class='btn btn-success btn-xs pull-right' style='margin-left:10px;' data-toggle='modal' data-target='#myModal'>subject</button>");
+		var createNewComment =$("<button class='btn btn-danger btn-xs pull-right' onclick='$(function(){new Esgi.module.user.Comment({ id : \"#container-comment2\"},{subId: "+cfg.result.subjectId+", panel:\"#subject"+cfg.result.subjectId+"\"});$(\"#myModal2\").modal(\"show\");})'>comment</button>");
 
 		me.el1= $( "<div class='panel-heading'></div>").append( 
 				$("<h4 class='panel-title'></h4")
 				.append($("<a data-toggle='collapse' data-parent='#MainPanel' href='#subject"+cfg.result.subjectId+"'>"+cfg.result.subjectName+"</a>"))
 				.append(createNewSubject).append(createNewComment)
-				);
-		//me.el = (me.el).append(head);
+		);
+
 		var collapse = $( "<div id='subject"+cfg.result.subjectId+"' class='panel-collapse collapse in'></div>");
 		var body = $("<div class='panel-body'></div>");
 		var subdiv = $("<div class='row'></div>");
-		var img = $("<img class='img img-responsive' src='"+cfg.imgPath+"' />")
+		var img = $("<img class='img img-responsive zoom' src='"+cfg.imgPath+"' />");
+		img.bind("click",function(){
+			$("#container-pictures").append($("<img class='img img-responsive zoom' style='width:100%;' src='"+cfg.imgPath+"' />"));
+			$("#myModal3").modal("show");console.log("toto");
+			});
 		var div6_1 = $("<div class='col-md-6'></div>").append(img);
-		var div6_2 = $("<div class='col-md-6'>"+cfg.comment+"</div>");
-		//divContent.append(div6_1);
-		//divContent.append(div6_2);
-		 $(subdiv).append(div6_1);
-		 $(subdiv).append(div6_2);
-		 $(body).append(subdiv);
-		 $(collapse).append(body);
-		 me.el2 = collapse;
-		//$(me.cfg.renderTo).append(me.el);
-		this.init();
-		
-	};
-	shan.html.inputs.show.prototype = commons;
+		var div6_2 = $("<div class='col-md-6'>"+sliceCommment[0]+"</div>");
 
+		$(subdiv).append(div6_1);
+		$(subdiv).append(div6_2);
+		$(body).append(subdiv);
+		$(collapse).append(body);
+		me.el2 = collapse;
+		this.init();
+
+	};
+	
+	shan.html.inputs.show.prototype = commons;
+	shan.html.inputs.comment = function(cfg){
+		var sliceCommment = cfg.comment.split("*", 2);
+		var me = this;
+		me.cfg = cfg;
+		
+		var thead1 = $("<thead><tr><th style='width: 10%'>"+sliceCommment[1]+"</th><th style='width: 45%'></th><th style='width: 45%'></th></tr></thead>");
+		var tbody1 = $("<tbody></tbody>");
+		var tabTr = $("<tr></tr>").append($("<td></td>"));
+		var colImg = $("<td></td>").append($("<img class='img img-responsive zoom'src='"+cfg.imgPath+"' />"));
+		colImg.bind("click",function(){
+			$("#container-pictures").append($("<img  style='width:100%;' src='"+cfg.imgPath+"' />"));
+			$("#myModal3").modal("show");console.log("toto");
+			});
+		var colComment = $("<td><div>"+sliceCommment[0]+"</div></td>");
+		$(tabTr).append(colImg);
+		$(tabTr).append(colComment);
+		$(tbody1).append(tabTr);
+		me.el1 = thead1;
+		me.el2 = tbody1;
+		this.init();
+
+	};
+	shan.html.inputs.comment.prototype = commons;
 };
 
 $(loadMyLib2);

@@ -3,9 +3,11 @@
    <head>
      <title>toto</title>
      $context.setCssDependency("css")
-     <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+     <link rel="stylesheet" type="text/css" href="$context.getProperties().get("serverRoot")/res/css/bootstrap.min.css">
+     <link rel="stylesheet" type="text/css" src="$context.getProperties().get("serverRoot")/res/js/bootstrap-lightbox.min.css">
+     
    </head>
-   <body class="container">
+   <body class="container" style="background-color:rgb(16, 16, 16);">
     $context.getFragment("shared/main_header")
     $context.getFragment("__CURRENT__")
     $context.getFragment("shared/main_footer")
@@ -22,9 +24,10 @@
   
 
 
-   <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+   <script src="$context.getProperties().get("serverRoot")/res/js/bootstrap.min.js"></script>
+   <script src="$context.getProperties().get("serverRoot")/res/js/bootstrap-lightbox.min.js"></script>	
    <script src="$context.getProperties().get("serverRoot")/res/js/mylib.js"></script>
-    <script src="$context.getProperties().get("serverRoot")/res/js/4shan/mypanellib.js"></script>
+   <script src="$context.getProperties().get("serverRoot")/res/js/4shan/mypanellib.js"></script>
    
   
    						

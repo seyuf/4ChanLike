@@ -3,10 +3,11 @@ $(function(){
 	Esgi.module = Esgi.module || {}
 	Esgi.module.user = Esgi.module.user || {}
 
-	Esgi.module.user.Comment = function (cfg, subId) {
-		console.log("comment sub Id",subId);
+	Esgi.module.user.Comment = function (cfg, subData) {
+		console.log("comment sub Id",subData.subId);
 		new Esgi.html.Form({
 			url : APP_CONTEXT+'/user/connect',
+			FileUrl : APP_CONTEXT+'/file/upload',
 			renderTo : cfg.id,
 			inputs : [
 			          {
@@ -31,10 +32,12 @@ $(function(){
 			          ,{
 			        	  type : "Button",
 			        	  name : 'submit',
-			        	  label: 'Post'
+			        	  label: 'Post',
+			        	  subjectId : subData.subId
 			          }
 			          ],
-			 subjectId : subId
+			 subjectId : subData.subId,
+			 panel : subData.panel
 		});
 	}
 

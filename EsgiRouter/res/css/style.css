@@ -1,6 +1,4 @@
 
-body p {
-	background-color:rgba(120,120,120,0.6);
-	
-	font-color:red;
+body {
+	background-color:rgb(16, 16, 16);
 }

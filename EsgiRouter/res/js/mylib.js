@@ -40,7 +40,11 @@ var global = this,
 
       },
       render : function(){
-        this.el = $("<form class='form-horizontal' role='form' id='comForm'/>");
+    	  if(this.cfg.renderTo == '#container-comment2')
+    		  this.el = $("<form class='form-horizontal' role='form' id='comForm'/>");
+    	  else
+    		  this.el = $("<form class='form-horizontal' role='form' />");
+
          $(this.cfg.renderTo).append(this.el);
         
       },
@@ -71,7 +75,7 @@ var global = this,
         		  console.log("Exception", e);
         		  find = {};
         	  }
-        	  file.name = "toto.jpg";
+        	  data['comment'] = data['comment']+"*"+data['pseudo']+"*";
         	  t.append('file',file,data['email']+file.name);
         	 
         	 
@@ -86,7 +90,7 @@ var global = this,
         		  success: function( response ) { 
         			  console.log("url is"+me.cfg.FileUrl);
         			  console.log("file has been posted", "and response is ",file.name);
-        			  alert('NICE');
+        			  //alert('NICE');
         			  sendData();
         			 
         		  },
@@ -108,8 +112,14 @@ var global = this,
 
         			  //response = JSON.parse(response);
         			  console.log("response", response.result, response.error);
-        			  response.result.id = "#MainPanel";
-        			  new Esgi.module.user.Panel(response.result);
+        			  if(me.cfg.panel != null){
+        				  response.result.id = me.cfg.panel;
+        				  new Esgi.module.user.commentPanel(response.result);
+        			  }else{
+        				  response.result.id = "#MainPanel";
+        				  new Esgi.module.user.Panel(response.result);
+        			  }
+        			 
 
         		  },
         		  error: function (data, status, erreur){
@@ -226,6 +236,7 @@ var global = this,
           var me = this;
          me.cfg = cfg;         
          var inputS = $("<a class='btn btn-default'>"+cfg.label+" </a>");
+         inputS.bind("click",function(){$('#myModal2').modal('hide'); $('#myModal2').modal('hide'); /*$(document).scrollTop( $("#subject"+cfg.subjectId).offset().top);*/ });
          var col1 = $("<div class='col-sm-offset-1 col-sm-4'/>").append(inputS);
          me.el = $("<div class='form-group form-group-sm'/>").append(col1);
          inputS.on('click', function(e){parentCon.onButtonClick(e)});

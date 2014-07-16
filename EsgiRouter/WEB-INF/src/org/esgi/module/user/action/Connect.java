@@ -36,6 +36,16 @@ public class Connect extends AbstractAction{
 		String subjectID = context.getRequest().getParameter("commentId");
 		if(subjectID != null){
 			System.out.println("must set comment");
+			String created = this.newComment(pseudo, email, subjectName, comment, filePath, subjectID);
+			if(created == null){
+				created = "{\"result\": \"the comment already exist\",\"error\":true}";
+			}else{
+				created = "{\"result\":"+created+", \"error\":false}";
+			}
+
+			context.getResponse().setContentType("application/json");
+			context.getResponse().getWriter().write(created);
+			
 		}else{
 			String created = this.newSubject(pseudo, email, subjectName, comment, filePath);
 			if(created == null){
@@ -47,17 +57,12 @@ public class Connect extends AbstractAction{
 			context.getResponse().setContentType("application/json");
 			context.getResponse().getWriter().write(created);
 
-			Subject sub = new Subject();
-			sub.subjectID=1;
-			sub = (Subject) ORM.load((Class<Object>)(Object)Subject.class, sub.getId());
-
-			System.out.println("titre sujet"+sub.getId());
 		}
 
 	}
 	
 	
-	
+	// set new subject with comments
 	private String newSubject(String pseudo, String email, String subjectTitle, String CommentText, String filePath){
 		
 		
@@ -132,9 +137,12 @@ public class Connect extends AbstractAction{
 		}
 
 
+		
+			return "{\"subjectName\":\""+sub.subjectName+"\", \"subjectId\":\""+sub.getId()+"\", \"commentId\":\""+com.getId()+"\",\"commentContent\":\""+com.getContent()
+					+"\",\"userName\":\""+toto.getPseudo()+"\",\"filePath\":\""+testFile.getPath()+"\"}";
+		
 
-		return "{\"subjectName\":\""+sub.subjectName+"\", \"subjectId\":\""+sub.getId()+"\", \"commentId\":\""+com.getId()+"\",\"commentContent\":\""+com.getContent()
-				+"\",\"userName\":\""+toto.getPseudo()+"\",\"filePath\":\""+testFile.getPath()+"\"}";
+		
 	}
 	//tableIn.class
 	private Object databaseIntegrity(Class<Object> tableIn, String field, String value) {
@@ -155,5 +163,77 @@ public class Connect extends AbstractAction{
 			return null;
 		}
 		
+	}
+	
+	//add net comment
+private String newComment(String pseudo, String email, String subjectTitle, String CommentText, String filePath, String subjectId){
+		
+		// if we were paid check if the subject exist 
+	
+		User toto;
+		toto = (User) this.databaseIntegrity((Class<Object>)(Object)User.class, "userMail", email);
+		//TODO update user pseudo
+		if(toto == null){
+
+			// set user
+			toto = new User();
+			toto.setPseudo(pseudo);
+			toto.setMail(email);
+			try{
+				ORM.save(toto);
+			}catch(Exception e){
+				System.out.println("Expection while saving user ******"+e.getMessage());
+				System.exit(0);
+
+			}
+		}
+
+		// set subgject
+		Subject sub = new Subject();
+		sub.subjectID = Integer.valueOf(subjectId);
+		sub.setName(subjectTitle);
+		java.util.Date now = new java.util.Date();
+		sub.setDate(new java.sql.Date(now.getTime())); 
+		sub.userId = toto;
+		
+
+		// init comment
+		Comment com = new Comment();
+		com.setContent(CommentText);	
+		try{
+			System.out.println( ORM.save(com));
+		}catch(Exception e){
+			System.out.println("Exception comment *****"+e.getMessage());
+			System.exit(0);
+		}
+		
+		// init file
+		File testFile =  new File();
+		testFile.setPath(filePath);
+		testFile.commentId = com;
+
+		try{
+			System.out.println( ORM.save(testFile));
+		}catch(Exception e){
+			System.out.println("subject exception"+e.getMessage());
+			System.exit(0);
+
+		}
+
+		// update comment file and subject field
+		com.addSubject(sub);
+		com.setFile(testFile);
+		try{
+			System.out.println( ORM.save(com));
+		}catch(Exception e){
+			System.out.println("comment Exception"+e.getMessage());
+			System.exit(0);
+
+		}
+
+
+
+		return "{\"subjectId\":\""+subjectId+"\", \"commentId\":\""+com.getId()+"\",\"commentContent\":\""+com.getContent()
+				+"\",\"userName\":\""+toto.getPseudo()+"\",\"filePath\":\""+testFile.getPath()+"\"}";
 	}
 }
