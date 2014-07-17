@@ -9,6 +9,7 @@ import org.esgi.orm.my.annotations.ORM_PK;
 import org.esgi.orm.my.annotations.ORM_RELATION;
 import org.esgi.orm.my.annotations.ORM_SCHEMA;
 import org.esgi.orm.my.annotations.ORM_TABLE;
+import org.esgi.orm.my.interfaces.ICategorie;
 import org.esgi.orm.my.interfaces.ISubject;
 import org.esgi.orm.my.interfaces.IUser;
 
@@ -24,6 +25,10 @@ public class Subject implements ISubject {
 	public String subjectName;
 	@ORM_FIELD("datetime")
 	public Date date;
+	@ORM_FIELD("int")
+	@ORM_RELATION("manyToOne")
+	@ORM_CLASSNAME("org.esgi.orm.my.model.Categorie")
+	public ICategorie categorieId;
 	@ORM_RELATION("manyToOne")
 	@ORM_CLASSNAME("org.esgi.orm.my.model.User")
 	public IUser userId;
@@ -56,6 +61,16 @@ public class Subject implements ISubject {
 	@Override
 	public IUser getUser() {
 		return this.userId;
+	}
+	
+	@Override
+	public ICategorie getCategorie() {
+		return this.categorieId;
+	}
+	
+	@Override
+	public void setCategorie(ICategorie cat) {
+		this.categorieId = cat;
 	}
 	
 	@Override

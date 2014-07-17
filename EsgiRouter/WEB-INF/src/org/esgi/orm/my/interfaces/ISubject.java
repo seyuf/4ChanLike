@@ -10,5 +10,7 @@ public interface ISubject {
 	public Date getDate ();
 	public void setDate (Date date);
 	public IUser getUser ();
+	public ICategorie getCategorie();
+	public void setCategorie(ICategorie cat);
 
 }
