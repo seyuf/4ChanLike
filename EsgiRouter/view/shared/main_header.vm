@@ -9,7 +9,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="#">Brand</a>
+      <a class="navbar-brand" href="#">Gitlab</a>
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
@@ -18,9 +18,9 @@
       <ul class="nav navbar-nav">
         <!-- generate categoies dynamically -->			
         <li class="active"><a href="#">Categorie1</a></li>
-        <li><a href="#">Categorie2</a></li>
-        <li><a href="#">Categorie3</a></li>
-        <li><a href="#">Categorie4</a></li>
+        <li><a href="#" id="category1">Categorie2</a></li>
+        <li><a href="#" id="category2">Categorie3</a></li>
+        <li><a href="#" id="category3">Categorie4</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
  		<form class="navbar-form navbar-left" role="search">

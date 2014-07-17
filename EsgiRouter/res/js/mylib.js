@@ -53,8 +53,14 @@ var global = this,
           var me = this, data = {};
           var file = {}; 
           
+          if (me._inputs['comment'].getValue() == ''){
+        	  alert('must fill the comment field');
+      		console.log("no comment");
+      		return false;
+          }
+          
           if(this.cfg.subjectId != undefined){
-        	  console.log("sujectId",this.cfg.subjectId );
+        	  console.log("sujectId", this.cfg.subjectId );
         	  data['commentId'] = this.cfg.subjectId;
           }
     
@@ -63,6 +69,7 @@ var global = this,
             if(key == 'image'){
             	file = item.el;
             }
+
           })
           
           var saveFile = function(){
@@ -76,7 +83,14 @@ var global = this,
         		  find = {};
         	  }
         	  data['comment'] = data['comment']+"*"+data['pseudo']+"*";
+        	  try{
         	  t.append('file',file,data['email']+file.name);
+        	  }catch (e) {
+        		  console.log("file upload Exception", e);
+    			  sendData();
+
+        	  }
+        	  
         	 
         	 
 
@@ -90,7 +104,6 @@ var global = this,
         		  success: function( response ) { 
         			  console.log("url is"+me.cfg.FileUrl);
         			  console.log("file has been posted", "and response is ",file.name);
-        			  //alert('NICE');
         			  sendData();
         			 
         		  },
@@ -160,6 +173,7 @@ var global = this,
        var me = this;
        me.cfg = cfg;
        var input = $("<input type='text' name='"+cfg.name+"' class='form-control'/>");
+       
        var col1 = $("<div class='col-sm-4'/>").append(input);
        var label = $("<label class='control-label col-sm-3'>"+cfg.label+"</label>");
        me.el = $("<div class='form-group form-group-sm'/>").append(label);
@@ -236,7 +250,16 @@ var global = this,
           var me = this;
          me.cfg = cfg;         
          var inputS = $("<a class='btn btn-default'>"+cfg.label+" </a>");
-         inputS.bind("click",function(){$('#myModal2').modal('hide'); $('#myModal2').modal('hide'); /*$(document).scrollTop( $("#subject"+cfg.subjectId).offset().top);*/ });
+         inputS.bind("click",function(){
+        	 $('#myModal2').modal('hide');
+        	 $('#myModal2').modal('hide');  
+        	 $('#myModal1').modal('hide'); 
+        	 if(cfg.subjectId){
+        		 $(document).scrollTop( $("#subject"+cfg.subjectId).offset().top);
+        	 }else{
+        		 //$(document).scrollTop( $("#subject"+cfg.subjectId).offset().top);
+        	 }
+        	 });
          var col1 = $("<div class='col-sm-offset-1 col-sm-4'/>").append(inputS);
          me.el = $("<div class='form-group form-group-sm'/>").append(col1);
          inputS.on('click', function(e){parentCon.onButtonClick(e)});

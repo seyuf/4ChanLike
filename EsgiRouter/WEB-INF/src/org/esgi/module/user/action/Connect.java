@@ -34,6 +34,10 @@ public class Connect extends AbstractAction{
 		String subjectName = context.getRequest().getParameter("subject");
 		String comment = context.getRequest().getParameter("comment");
 		String subjectID = context.getRequest().getParameter("commentId");
+		
+		//omment remov = new Comment();
+		ORM.remove((Class<Object>)(Object)Comment.class, 9);
+		
 		if(subjectID != null){
 			System.out.println("must set comment");
 			String created = this.newComment(pseudo, email, subjectName, comment, filePath, subjectID);
@@ -47,7 +51,7 @@ public class Connect extends AbstractAction{
 			context.getResponse().getWriter().write(created);
 			
 		}else{
-			String created = this.newSubject(pseudo, email, subjectName, comment, filePath);
+			String created = newSubject(pseudo, email, subjectName, comment, filePath);
 			if(created == null){
 				created = "{\"result\": \"the subject already exist\",\"error\":true}";
 			}else{
@@ -73,7 +77,7 @@ public class Connect extends AbstractAction{
 		
 
 		User toto;
-		toto = (User) this.databaseIntegrity((Class<Object>)(Object)User.class, "userMail", email);
+		toto = (User) databaseIntegrity((Class<Object>)(Object)User.class, "userMail", email);
 		if(toto == null){
 
 			// set user

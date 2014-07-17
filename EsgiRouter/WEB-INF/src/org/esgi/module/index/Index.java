@@ -26,19 +26,24 @@ public class Index extends AbstractAction{
 	}
 	
 	public void execute(IContext context) throws Exception {
+		try{
 		context.setSubjects((ArrayList<String>) this.getSubjectList());
+		}catch(Exception e){
+			
+			//return "{\"error\":\"there is no comment\"}";
+		}
 	}
 
 	
-
+	
 	private String getCommentsFromSubject(int subjectId) {
 		Map<String, Object> where = new HashMap<>();
 		where.put("subjectId", subjectId);
 		List<Object> checkCom= ORM.find((Class<Object>)(Object)Comment.class,new String[]{"*"}, where, new String[]{"fileId"}, 10,0);
-		if (!checkCom.isEmpty() ){
+		if ( !checkCom.isEmpty() ){
 			StringBuffer comments = new StringBuffer("[");
 			
-			// [{comnent:"dede",file:"path"},]
+			// [{comment:"dede",file:"path"},]
 			int sizeCom = checkCom.size();
 			for (int i = 0; i < sizeCom ; i++) {
 				Comment com = (Comment) checkCom.get(i);

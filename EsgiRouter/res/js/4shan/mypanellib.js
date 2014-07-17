@@ -123,7 +123,11 @@ loadMyLib2 = function(onloaded){
 		var thead1 = $("<thead><tr><th style='width: 10%'>"+sliceCommment[1]+"</th><th style='width: 45%'></th><th style='width: 45%'></th></tr></thead>");
 		var tbody1 = $("<tbody></tbody>");
 		var tabTr = $("<tr></tr>").append($("<td></td>"));
-		var colImg = $("<td></td>").append($("<img class='img img-responsive zoom'src='"+cfg.imgPath+"' />"));
+		var object = $("<object data='"+cfg.imgPath+"' type='image/png'></object>");
+		var img = $("<img class='img img-responsive zoom'src='/EsgiRouter/res/img/base_img2.jpg' />");
+		
+		object.append(img);
+		var colImg = $("<td></td>").append(object);
 		colImg.bind("click",function(){
 			$("#container-pictures").append($("<img  style='width:100%;' src='"+cfg.imgPath+"' />"));
 			$("#myModal3").modal("show");console.log("toto");
