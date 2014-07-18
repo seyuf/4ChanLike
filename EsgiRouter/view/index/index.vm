@@ -18,7 +18,7 @@ $context.setJsDependency($js2)
 $context.setJsDependency($js3)
 
 
-
+$context.addOnJsReady("$('li').removeClass('active'); $('#$context.getParameter('path')').addClass('active');")
 $context.addOnJsReady("new Esgi.module.user.Subject({ id : '#container-subject'})")
 
  #foreach($subject in $context.getSubjects())

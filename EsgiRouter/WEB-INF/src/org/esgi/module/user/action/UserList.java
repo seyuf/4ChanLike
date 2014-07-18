@@ -1,9 +1,9 @@
 package org.esgi.module.user.action;
 
-import org.esgi.web.action.IAction;
+import org.esgi.web.action.AbstractAction;
 import org.esgi.web.action.IContext;
 
-public class UserList implements IAction{
+public class UserList extends AbstractAction{
 	
 	public String getRoute() {
 		return "user/list";
@@ -12,12 +12,6 @@ public class UserList implements IAction{
 	public void execute(IContext context) {
 		System.out.println("In User List");
 		
-	}
-
-	@Override
-	public String getLayout() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override

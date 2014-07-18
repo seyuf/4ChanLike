@@ -1,5 +1,6 @@
 <div class="page-header">
 
+ #if ( $context.getParameter('path') != "admin"  )
 <nav class="navbar navbar-inverse" role="navigation">
   <div class="container-fluid">
     <div class="navbar-header">
@@ -9,7 +10,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="#">Gitlab</a>
+      <a class="navbar-brand" href="#">$context.getParameter('path')</a>
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
@@ -17,10 +18,11 @@
     
       <ul class="nav navbar-nav">
         <!-- generate categoies dynamically -->			
-        <li class="active"><a href="#">Categorie1</a></li>
-        <li><a href="#" id="category1">Categorie2</a></li>
-        <li><a href="#" id="category2">Categorie3</a></li>
-        <li><a href="#" id="category3">Categorie4</a></li>
+        <li class="active" id="gitlab"><a href="$context.getProperties().get("serverRoot")/index/gitlab/" >gitlab</a></li>
+        <li id="angularJs"><a href="$context.getProperties().get("serverRoot")/index/angularJs/" >angularJs</a></li>
+        <li id="maven"><a href="$context.getProperties().get("serverRoot")/index/maven/" >maven</a></li>
+        <li id="cumcumber"><a href="$context.getProperties().get("serverRoot")/index/cumcumber/" >cumcumber</a></li>
+        <li id="admin"><a href="$context.getProperties().get("serverRoot")/admin/admin/">admin</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
  		<form class="navbar-form navbar-left" role="search">
@@ -33,4 +35,19 @@
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>
+#else
+<nav class="navbar navbar-inverse" role="navigation">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar">dde</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#" style="color:red;">Admin</a>
+    </div>
+  </div><!-- /.container-fluid -->
+</nav>
+ #end
 </div>

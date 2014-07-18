@@ -82,6 +82,7 @@ var global = this,
         		  console.log("Exception", e);
         		  find = {};
         	  }
+        	 
         	  data['comment'] = data['comment']+"*"+data['pseudo']+"*";
         	  try{
         	  t.append('file',file,data['email']+file.name);
@@ -116,6 +117,7 @@ var global = this,
          
           
           var sendData = function(){
+        	  data['category'] =  $('.active').attr('id');
         	  $.ajax({
         		  url : me.cfg.url,
         		  method : 'POST',
@@ -149,6 +151,18 @@ var global = this,
           e.preventDefault();
           
           return false;
+      },
+      onButtonFind: function(e){
+    	  var me = this;
+    	  if (me._inputs['comment'].getValue() == ''){
+        	  alert('must fill the subject name field');
+      		return false;
+          }
+    	  var subject = me._inputs['comment'].getValue();
+    	  console.log("subject is", me._inputs['comment'].getValue());
+    	  document.location.href = "http://localhost:8080/EsgiRouter/admin/"+subject+"/";
+    	  e.preventDefault();
+    	  
       }
 
 }
@@ -252,8 +266,8 @@ var global = this,
          var inputS = $("<a class='btn btn-default'>"+cfg.label+" </a>");
          inputS.bind("click",function(){
         	 $('#myModal2').modal('hide');
-        	 $('#myModal2').modal('hide');  
-        	 $('#myModal1').modal('hide'); 
+        	 //$('#myModal2').modal('hide');  
+        	 $('#myModal').modal('hide'); 
         	 if(cfg.subjectId){
         		 $(document).scrollTop( $("#subject"+cfg.subjectId).offset().top);
         	 }else{
@@ -266,6 +280,30 @@ var global = this,
          this.init(); 
       };
       Esgi.html.inputs.Button.prototype = commons;
+      
+      Esgi.html.inputs.find = function(cfg, parentCon){
+          var me = this;
+         me.cfg = cfg;         
+         var inputS = $("<a class='btn btn-default'>"+cfg.label+" </a>");
+         inputS.bind("click",function(){
+        	 $('#myModal2').modal('hide');
+        	 //$('#myModal2').modal('hide');  
+        	 $('#myModal').modal('hide'); 
+        	 if(cfg.subjectId){
+        		 $(document).scrollTop( $("#subject"+cfg.subjectId).offset().top);
+        	 }else{
+        		 //$(document).scrollTop( $("#subject"+cfg.subjectId).offset().top);
+        	 }
+        	 });
+         var col1 = $("<div class='col-sm-offset-1 col-sm-4'/>").append(inputS);
+         me.el = $("<div class='form-group form-group-sm'/>").append(col1);
+         inputS.on('click', function(e){
+        	 
+        	 parentCon.onButtonFind(e);
+         });
+         this.init(); 
+      };
+      Esgi.html.inputs.find.prototype = commons;
 
 }
 

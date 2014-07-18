@@ -48,6 +48,7 @@ Esgi.module.user.Panel = function (cfg) {
 					 id: "#subject"+cfg.subjectId,
 					 subjectId: cfg.subjectId,
 					 userName: cfg.userName
+					 
 			 }
 			 console.log("comment"+i, comment.imgPath);
 			 new Esgi.module.user.commentPanel(comment, comment.subjectId);

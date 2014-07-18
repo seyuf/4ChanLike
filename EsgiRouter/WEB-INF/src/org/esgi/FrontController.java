@@ -15,7 +15,7 @@ import org.esgi.module.file.FileDownload;
 import org.esgi.module.file.FileList;
 import org.esgi.module.file.FileUpload;
 import org.esgi.module.index.Index;
-import org.esgi.module.news.NewsDisplay;
+import org.esgi.module.user.action.Admin;
 import org.esgi.module.user.action.Connect;
 import org.esgi.module.user.action.UserCreate;
 import org.esgi.module.user.action.UserList;
@@ -54,12 +54,12 @@ public class FrontController extends HttpServlet {
 		
 		registerAction(new UserCreate());
 		registerAction(new UserList());
-		registerAction(new NewsDisplay());
 		registerAction(new FileDelete());
 		registerAction(new FileDownload());
 		registerAction(new FileUpload());
 		registerAction(new FileList());
 		registerAction(new Index());
+		registerAction(new Admin());
 		registerAction(new Connect());
 		
 	}

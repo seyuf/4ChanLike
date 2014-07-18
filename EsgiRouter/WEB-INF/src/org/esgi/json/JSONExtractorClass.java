@@ -50,6 +50,7 @@ public class JSONExtractorClass {
 		while (ret.size() < els.size()) {
 			out:
 			for (String key : deps.keySet()) {
+				System.out.println("dependencies"+key);
 			    if (deps.get(key).isEmpty()) {
 			    	ret.add(key);
 			    	deps.remove(key);

@@ -32,6 +32,7 @@ public class Subject implements ISubject {
 	@ORM_RELATION("manyToOne")
 	@ORM_CLASSNAME("org.esgi.orm.my.model.User")
 	public IUser userId;
+	
 
 	@Override
 	public int getId() {

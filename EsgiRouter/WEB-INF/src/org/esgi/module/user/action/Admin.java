@@ -1,10 +1,6 @@
-package org.esgi.module.index;
+package org.esgi.module.user.action;
 
-import org.esgi.web.action.AbstractAction;
-import org.esgi.web.action.IContext;
 
-import java.io.Console;
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,39 +8,73 @@ import java.util.Map;
 
 import org.esgi.orm.my.ORM;
 import org.esgi.orm.my.model.Categorie;
-import org.esgi.orm.my.model.File;
-import org.esgi.orm.my.model.User;
 import org.esgi.orm.my.model.Comment;
+import org.esgi.orm.my.model.File;
 import org.esgi.orm.my.model.Subject;
 import org.esgi.web.action.AbstractAction;
 import org.esgi.web.action.IContext;
 
-public class Index extends AbstractAction{
-	
+
+
+public class Admin extends AbstractAction{
+	@Override
+	public void execute(IContext context) throws Exception {
+		// TODO Auto-generated method stub
+		
+		String content = context.getRequest().getParameter("commentContent");
+		
+
+		if(content != null){
+			try{
+			Map<String, Object> where = new HashMap<>();
+			where.put("commentContent", (Object)content);
+			Comment com =  (Comment) (ORM.find((Class<Object>)(Object)Comment.class, new String[]{"*"}, where, null, null, null)).get(0);
+			
+			ORM.remove((Class<Object>)(Object)Comment.class, 2);
+			
+			if(ORM.remove((Class<Object>)(Object)File.class, com.getId()))
+			{
+				String response = "{\"result\": \"true\",\"error\":false}";
+				context.getResponse().setContentType("application/json");
+				context.getResponse().setContentLength(response.length());
+				context.getResponse().getWriter().write(response);
+			}
+			}catch(Exception e){
+				System.out.println(e.getMessage());
+				
+					String response = "{\"result\": \"false\",\"error\":true}";
+					context.getResponse().setContentType("application/json");
+					context.getResponse().setContentLength(response.length());
+					context.getResponse().getWriter().write(response);
+				
+			}
+		}
+
+		
+		String comment = (String)context.getParameter("path");
+		System.out.println(" admin is fr:"+context.getParameter("path"));
+		context.setParameter("path", "admin");
+		if(comment != null){
+		try{
+			context.setSubjects((ArrayList<String>) getSubjectList(comment));
+
+		}catch(Exception e){
+			
+		}
+		};
+		
+	}
+
 	@Override
 	public String getRoute() {
-		return "/index/(.*)?/";
+		// TODO Auto-generated method stub
+		return "/admin/(.*)?/";
 	}
-	
+
 	@Override
 	public String[] getRewriteGroups() {
 		return new String[]{"path"};
 	}
-	
-	
-	public void execute(IContext context) throws Exception {
-		context.getResponse().setContentType("text/html");
-		try{
-		context.setSubjects((ArrayList<String>) getSubjectList((String)context.getParameter("path")));
-		
-		}catch(Exception e){
-			
-			
-			//return "{\"error\":\"there is no comment\"}";
-		}
-	}
-
-	
 	
 	private String getCommentsFromSubject(int subjectId) {
 		Map<String, Object> where = new HashMap<>();
@@ -82,8 +112,6 @@ public class Index extends AbstractAction{
 		}
 		
 	}
-	
-	
 	private String getFileFromComment(int commentId) {
 		Map<String, Object> where = new HashMap<>();
 		where.put("commentId", commentId);
@@ -99,22 +127,12 @@ public class Index extends AbstractAction{
 		
 	}
 	
-	private List<String> getSubjectList(String category){
+	private List<String> getSubjectList(String subjectName){
 		List<String>  jsonSubjects= new ArrayList<String>();
 		
-		Map<String, Object> where = new HashMap<>();
-		where.put("categorieName", category);
-		Categorie catego = null;
-		List<Object> cat = ORM.find((Class<Object>)(Object)Categorie.class,new String[]{"*"}, where, null, null,null);
-		if (!cat.isEmpty() ){
-			catego = (Categorie) cat.get(0);
-		}else{
-			jsonSubjects.add("{\"error\":\"there is no subject\"}");
-			return jsonSubjects;
-		}
 		
 		Map<String, Object> whereB = new HashMap<>();
-		whereB.put("categorieId", catego.getId());
+		whereB.put("subjectName", subjectName);
 		List<Object> checkSub= ORM.find((Class<Object>)(Object)Subject.class,new String[]{"*"}, whereB, new String[]{"date"}, 10,0);
 		if (!checkSub.isEmpty() ){
 			for (int i = 0; i < checkSub.size(); i++) {
@@ -134,4 +152,5 @@ public class Index extends AbstractAction{
 		}
 	}
 	
+
 }

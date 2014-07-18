@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.esgi.orm.my.ORM;
+import org.esgi.orm.my.model.Categorie;
 import org.esgi.orm.my.model.File;
 import org.esgi.orm.my.model.User;
 import org.esgi.orm.my.model.Comment;
@@ -34,13 +35,13 @@ public class Connect extends AbstractAction{
 		String subjectName = context.getRequest().getParameter("subject");
 		String comment = context.getRequest().getParameter("comment");
 		String subjectID = context.getRequest().getParameter("commentId");
+		String categorie = context.getRequest().getParameter("category");
 		
-		//omment remov = new Comment();
-		ORM.remove((Class<Object>)(Object)Comment.class, 9);
+		System.out.println("cat is"+categorie);
 		
 		if(subjectID != null){
 			System.out.println("must set comment");
-			String created = this.newComment(pseudo, email, subjectName, comment, filePath, subjectID);
+			String created = newComment(pseudo, email, subjectName, comment, filePath, subjectID);
 			if(created == null){
 				created = "{\"result\": \"the comment already exist\",\"error\":true}";
 			}else{
@@ -51,7 +52,7 @@ public class Connect extends AbstractAction{
 			context.getResponse().getWriter().write(created);
 			
 		}else{
-			String created = newSubject(pseudo, email, subjectName, comment, filePath);
+			String created = newSubject(pseudo, email, subjectName, comment, filePath, categorie);
 			if(created == null){
 				created = "{\"result\": \"the subject already exist\",\"error\":true}";
 			}else{
@@ -67,10 +68,10 @@ public class Connect extends AbstractAction{
 	
 	
 	// set new subject with comments
-	private String newSubject(String pseudo, String email, String subjectTitle, String CommentText, String filePath){
+	private String newSubject(String pseudo, String email, String subjectTitle, String CommentText, String filePath , String category){
 		
 		
-		Subject testSub = (Subject) this.databaseIntegrity((Class<Object>)(Object)Subject.class, "subjectName", subjectTitle);
+		Subject testSub = (Subject) databaseIntegrity((Class<Object>)(Object)Subject.class, "subjectName", subjectTitle);
 		if(testSub != null){
 			return null;
 		}
@@ -92,6 +93,21 @@ public class Connect extends AbstractAction{
 
 			}
 		}
+		
+		// set category
+		Categorie cat = (Categorie) databaseIntegrity((Class<Object>)(Object)Categorie.class, "categorieName", category);
+		if(cat == null){
+			 cat = new Categorie();
+			cat.setName(category);
+			try{
+				System.out.println( ORM.save(cat));
+			}catch(Exception e){
+				System.out.println("category exception"+e.getMessage());
+				System.exit(0);
+
+			}
+		}
+		
 
 		// set subgject
 		Subject sub = new Subject();
@@ -99,6 +115,7 @@ public class Connect extends AbstractAction{
 		java.util.Date now = new java.util.Date();
 		sub.setDate(new java.sql.Date(now.getTime())); 
 		sub.userId = toto;
+		sub.categorieId = cat;
 		try{
 			System.out.println( ORM.save(sub));
 		}catch(Exception e){
@@ -175,7 +192,7 @@ private String newComment(String pseudo, String email, String subjectTitle, Stri
 		// if we were paid check if the subject exist 
 	
 		User toto;
-		toto = (User) this.databaseIntegrity((Class<Object>)(Object)User.class, "userMail", email);
+		toto = (User) databaseIntegrity((Class<Object>)(Object)User.class, "userMail", email);
 		//TODO update user pseudo
 		if(toto == null){
 
@@ -191,6 +208,8 @@ private String newComment(String pseudo, String email, String subjectTitle, Stri
 
 			}
 		}
+		
+		
 
 		// set subgject
 		Subject sub = new Subject();
@@ -199,7 +218,13 @@ private String newComment(String pseudo, String email, String subjectTitle, Stri
 		java.util.Date now = new java.util.Date();
 		sub.setDate(new java.sql.Date(now.getTime())); 
 		sub.userId = toto;
-		
+		try{
+			System.out.println( ORM.save(sub));
+		}catch(Exception e){
+			System.out.println("subject exception"+e.getMessage());
+			System.exit(0);
+
+		}
 
 		// init comment
 		Comment com = new Comment();
@@ -219,7 +244,7 @@ private String newComment(String pseudo, String email, String subjectTitle, Stri
 		try{
 			System.out.println( ORM.save(testFile));
 		}catch(Exception e){
-			System.out.println("subject exception"+e.getMessage());
+			System.out.println("file exception"+e.getMessage());
 			System.exit(0);
 
 		}
