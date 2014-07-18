@@ -14,23 +14,14 @@ import org.esgi.web.action.IContext;
 public class VelocityRender {
 	
 	public StringWriter execute(IContext context, String file) {
-		
-		//String [] splited =  file.split("/");
-		file+=".vm";
-		System.out.println("velo file:"+file);
 	
-		//System.exit(0);
+		file+=".vm";
 		Properties p = new Properties();
 	    p.setProperty("file.resource.loader.path", ((String) context.getRequest().getServletContext().getRealPath("/")) + "view/");
 	    Velocity.init( p );
 	    
 		VelocityContext velocityContext = new VelocityContext();
-	
-		/*velocityContext.put( "name", new String("Velocity") );*/
-		/*velocityContext.put( "context", IContext.class );*/
-		/*velocityContext.*/
 		velocityContext.put("context", context );
-		//velocityContext.put("test", new String("toto") );
 	
 		Template template = null;
 		
@@ -60,7 +51,6 @@ public class VelocityRender {
 		StringWriter sw = new StringWriter();
 	
 		template.merge( velocityContext, sw );
-		//System.out.println(sw);
 		return sw;
 	}
 

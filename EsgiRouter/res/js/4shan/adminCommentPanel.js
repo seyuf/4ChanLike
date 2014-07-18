@@ -6,7 +6,6 @@ $(function(){
 	Esgi.module.user = Esgi.module.user || {}
 
 	Esgi.module.user.AdminCommentPanel = function (cfg) {
-		console.log("comment Panel",cfg.filePath);
 
 		new  shan.html.panel({
 			url : APP_CONTEXT+'/user/connect',

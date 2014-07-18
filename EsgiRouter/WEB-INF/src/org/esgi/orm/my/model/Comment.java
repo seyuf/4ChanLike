@@ -26,10 +26,6 @@ public class Comment implements IComment {
 	@ORM_CLASSNAME("org.esgi.orm.my.model.Subject")
 	public ISubject subjectID;
 	@ORM_FIELD("int")
-	//@ORM_RELATION("manyToOne")
-	//@ORM_RELATION("oneToMany")
-	//@ORM_RELATION("manyToMany")
-	//@ORM_RELATION("oneToOne")
 	@ORM_RELATION("manyToOne")
 	@ORM_CLASSNAME("org.esgi.orm.my.model.File")
 	public IFile fileID;

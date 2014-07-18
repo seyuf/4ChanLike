@@ -104,8 +104,7 @@ public class ORM implements IORM {
 					Class listClass = this.getListClass(fields[i]);
 					try{
 
-						//System.out.println("creating table"+listClass);
-						//System.exit(0);
+						
 						this.createT++;
 						if(listClass == null){
 							System.out.println("listclas is "+ listClass+ "class is"+ clazz);
@@ -113,19 +112,11 @@ public class ORM implements IORM {
 							return;
 						}
 						
-						//this._createTable(listClass);
-						//return;
 						
-						//if(this.createT == 3)
-							//return;
 						
 
 					}catch(Throwable e){
 						System.out.println("Exception failed to create "+e.getMessage());
-						//e.printStackTrace();
-
-						//System.out.println("memory"+Runtime.getRuntime().totalMemory()+"free"+ Runtime.getRuntime().freeMemory());
-
 						System.exit(0);
 					}
 					String listValue = fields[i].getAnnotation(ORM_RELATION.class).value();
@@ -148,11 +139,9 @@ public class ORM implements IORM {
 							prepare.execute();
 							prepare.close();
 						} catch (Exception e) {
-							//e.printStackTrace();
 							 System.out.println("ORM Exception"+e.getMessage());
 						}
 					} else if (listValue.equals("manyToOne")) {
-						/* relation *..1 */
 						sql += fields[i].getName() + " " + this.getFieldTypeByClass(this.getPrimaryField(listClass.getDeclaredFields())) ;
 						if (i < fields.length -1) {
 							sql += ",";

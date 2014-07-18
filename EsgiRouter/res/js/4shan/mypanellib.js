@@ -104,7 +104,7 @@ loadMyLib2 = function(onloaded){
 		var div6_1 = $("<div class='col-md-6'></div>").append(object);
 		div6_1.bind("click",function(){
 			$("#container-pictures").append($("<img class='img img-responsive zoom' style='width:100%;' src='"+cfg.imgPath+"' />"));
-			$("#myModal3").modal("show");console.log("toto");
+			$("#myModal3").modal("show");;
 			});
 		var div6_2 = $("<div class='col-md-6'>"+sliceCommment[0]+"</div>");
 
@@ -134,7 +134,7 @@ loadMyLib2 = function(onloaded){
 		var colImg = $("<td></td>").append(object);
 		colImg.bind("click",function(){
 			$("#container-pictures").append($("<img  style='width:100%;' src='"+cfg.imgPath+"' />"));
-			$("#myModal3").modal("show");console.log("toto");
+			$("#myModal3").modal("show");
 			});
 		var colComment = $("<td><div>"+sliceCommment[0]+"</div></td>");
 		$(tabTr).append(colImg);
@@ -182,7 +182,7 @@ loadMyLib2 = function(onloaded){
        		  },
        		  error: function (data, status, erreur){
 
-       			  console.log("error data",data.getResponseHeader("content-type"));
+       			 
        			  console.log("status   ",status,"  cause", erreur);
        		  }
        		  
@@ -193,7 +193,7 @@ loadMyLib2 = function(onloaded){
 		var colImg = $("<td></td>").append(object);
 		colImg.bind("click",function(){
 			$("#container-pictures").append($("<img  style='width:100%;' src='"+cfg.imgPath+"' />"));
-			$("#myModal3").modal("show");console.log("toto");
+			$("#myModal3").modal("show");
 			});
 		var colComment = $("<td><div>"+sliceCommment[0]+"</div></td>");
 		$(tabTr).append(colImg);

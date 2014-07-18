@@ -4,7 +4,6 @@ $(function(){
 	Esgi.module.user = Esgi.module.user || {}
 
 	Esgi.module.user.Comment = function (cfg, subData) {
-		console.log("comment sub Id",subData.subId);
 		new Esgi.html.Form({
 			url : APP_CONTEXT+'/user/connect',
 			FileUrl : APP_CONTEXT+'/file/upload',

@@ -1,8 +1,6 @@
 package org.esgi.module.user.action;
 
-import java.io.Console;
-import java.sql.Date;
-import java.util.ArrayList;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +26,7 @@ public class Connect extends AbstractAction{
 	}
 	@Override
 	public void execute(IContext context) throws Exception {
-		
+
 		String pseudo = context.getRequest().getParameter("pseudo");
 		String email = context.getRequest().getParameter("email");
 		String filePath = context.getRequest().getParameter("image");
@@ -36,9 +34,9 @@ public class Connect extends AbstractAction{
 		String comment = context.getRequest().getParameter("comment");
 		String subjectID = context.getRequest().getParameter("commentId");
 		String categorie = context.getRequest().getParameter("category");
-		
+
 		System.out.println("cat is"+categorie);
-		
+
 		if(subjectID != null){
 			System.out.println("must set comment");
 			String created = newComment(pseudo, email, subjectName, comment, filePath, subjectID);
@@ -50,7 +48,7 @@ public class Connect extends AbstractAction{
 
 			context.getResponse().setContentType("application/json");
 			context.getResponse().getWriter().write(created);
-			
+
 		}else{
 			String created = newSubject(pseudo, email, subjectName, comment, filePath, categorie);
 			if(created == null){
@@ -65,17 +63,17 @@ public class Connect extends AbstractAction{
 		}
 
 	}
-	
-	
+
+
 	// set new subject with comments
 	private String newSubject(String pseudo, String email, String subjectTitle, String CommentText, String filePath , String category){
-		
-		
+
+
 		Subject testSub = (Subject) databaseIntegrity((Class<Object>)(Object)Subject.class, "subjectName", subjectTitle);
 		if(testSub != null){
 			return null;
 		}
-		
+
 
 		User toto;
 		toto = (User) databaseIntegrity((Class<Object>)(Object)User.class, "userMail", email);
@@ -88,16 +86,15 @@ public class Connect extends AbstractAction{
 			try{
 				ORM.save(toto);
 			}catch(Exception e){
-				System.out.println("Expection while saving user ******"+e.getMessage());
 				System.exit(0);
 
 			}
 		}
-		
+
 		// set category
 		Categorie cat = (Categorie) databaseIntegrity((Class<Object>)(Object)Categorie.class, "categorieName", category);
 		if(cat == null){
-			 cat = new Categorie();
+			cat = new Categorie();
 			cat.setName(category);
 			try{
 				System.out.println( ORM.save(cat));
@@ -107,7 +104,7 @@ public class Connect extends AbstractAction{
 
 			}
 		}
-		
+
 
 		// set subgject
 		Subject sub = new Subject();
@@ -132,7 +129,7 @@ public class Connect extends AbstractAction{
 			System.out.println("Exception comment *****"+e.getMessage());
 			System.exit(0);
 		}
-		
+
 		// init file
 		File testFile =  new File();
 		testFile.setPath(filePath);
@@ -158,16 +155,16 @@ public class Connect extends AbstractAction{
 		}
 
 
-		
-			return "{\"subjectName\":\""+sub.subjectName+"\", \"subjectId\":\""+sub.getId()+"\", \"commentId\":\""+com.getId()+"\",\"commentContent\":\""+com.getContent()
-					+"\",\"userName\":\""+toto.getPseudo()+"\",\"filePath\":\""+testFile.getPath()+"\"}";
-		
 
-		
+		return "{\"subjectName\":\""+sub.subjectName+"\", \"subjectId\":\""+sub.getId()+"\", \"commentId\":\""+com.getId()+"\",\"commentContent\":\""+com.getContent()
+				+"\",\"userName\":\""+toto.getPseudo()+"\",\"filePath\":\""+testFile.getPath()+"\"}";
+
+
+
 	}
 	//tableIn.class
 	private Object databaseIntegrity(Class<Object> tableIn, String field, String value) {
-		
+
 		try{
 			Map<String, Object> where = new HashMap<>();
 			where.put(field, value);
@@ -183,14 +180,14 @@ public class Connect extends AbstractAction{
 			System.out.println("Ex in checking data integrity"+e.getMessage());
 			return null;
 		}
-		
+
 	}
-	
+
 	//add net comment
-private String newComment(String pseudo, String email, String subjectTitle, String CommentText, String filePath, String subjectId){
-		
+	private String newComment(String pseudo, String email, String subjectTitle, String CommentText, String filePath, String subjectId){
+
 		// if we were paid check if the subject exist 
-	
+
 		User toto;
 		toto = (User) databaseIntegrity((Class<Object>)(Object)User.class, "userMail", email);
 		//TODO update user pseudo
@@ -208,8 +205,8 @@ private String newComment(String pseudo, String email, String subjectTitle, Stri
 
 			}
 		}
-		
-		
+
+
 
 		// set subgject
 		Subject sub = new Subject();
@@ -235,7 +232,7 @@ private String newComment(String pseudo, String email, String subjectTitle, Stri
 			System.out.println("Exception comment *****"+e.getMessage());
 			System.exit(0);
 		}
-		
+
 		// init file
 		File testFile =  new File();
 		testFile.setPath(filePath);

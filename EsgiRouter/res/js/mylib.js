@@ -60,7 +60,6 @@ var global = this,
           }
           
           if(this.cfg.subjectId != undefined){
-        	  console.log("sujectId", this.cfg.subjectId );
         	  data['commentId'] = this.cfg.subjectId;
           }
     
@@ -103,8 +102,6 @@ var global = this,
         		  processData:false,
         		  contentType:false,
         		  success: function( response ) { 
-        			  console.log("url is"+me.cfg.FileUrl);
-        			  console.log("file has been posted", "and response is ",file.name);
         			  sendData();
         			 
         		  },
@@ -124,9 +121,7 @@ var global = this,
         		  data : data,
 
         		  success : function(response, status) {
-
-        			  //response = JSON.parse(response);
-        			  console.log("response", response.result, response.error);
+        			  
         			  if(me.cfg.panel != null){
         				  response.result.id = me.cfg.panel;
         				  new Esgi.module.user.commentPanel(response.result);
@@ -159,7 +154,6 @@ var global = this,
       		return false;
           }
     	  var subject = me._inputs['comment'].getValue();
-    	  console.log("subject is", me._inputs['comment'].getValue());
     	  document.location.href = "http://localhost:8080/EsgiRouter/admin/"+subject+"/";
     	  e.preventDefault();
     	  

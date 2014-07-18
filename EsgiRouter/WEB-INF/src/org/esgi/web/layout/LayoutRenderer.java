@@ -46,9 +46,7 @@ public class LayoutRenderer {
 		
 		try {
 			list = JSONExtractorClass.getDependencies(context.getRequest().getServletContext().getRealPath("/")+"layout/"+action.getLayout()+".js");
-			for (String test : list) {
-				System.out.println("html"+ test);
-			}
+			
 			
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
@@ -79,7 +77,6 @@ public class LayoutRenderer {
 				VelocityRender velocity = new VelocityRender();
 				String[] parts = a.getClass().getName().split("\\.");
 				String view = parts[parts.length-2]+"/"+parts[parts.length-1].toLowerCase();
-				System.out.println("vm file is"+ view);
 				StringWriter sw = velocity.execute(context, view);
 				// Velocity.merge.....
 				context.setFragment(value, sw);

@@ -51,5 +51,5 @@ $context.addOnJsReady("new Esgi.module.user.Admin({ id : '#admin'})")
     </div>
   </div>
 </div>
-$context.addOnJsReady("$('#myModal2').on('hidden.bs.modal',function(e){$('#comForm').remove();console.log('removing form');})")
+$context.addOnJsReady("$('#myModal2').on('hidden.bs.modal',function(e){$('#comForm').remove();})")
 

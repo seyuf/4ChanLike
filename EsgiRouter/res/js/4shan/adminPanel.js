@@ -4,11 +4,9 @@ $(function(){
 	Esgi.module.user = Esgi.module.user || {}
 
 	Esgi.module.user.adminPanel = function (cfg) {
-		console.log("panel sub config",cfg);
 		if(cfg.error){
 			return;
 		}
-		///if(cfg.id == undefined)
 		cfg.id = "#MainPanel";
 
 		
@@ -33,7 +31,6 @@ $(function(){
 					subjectId: cfg.subjectId,
 					userName: cfg.userName
 			}
-			console.log("comment"+i, comment.imgPath);
 			new Esgi.module.user.AdminCommentPanel(comment, comment.subjectId);
 		}
 
