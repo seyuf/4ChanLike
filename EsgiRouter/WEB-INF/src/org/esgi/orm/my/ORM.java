@@ -40,8 +40,8 @@ public class ORM implements IORM {
 	public ORM() {
 		this.host = "localhost";
 		this.port = 3306;
-		this.login = "root";
-		this.mdp = "mamama";
+		this.login = "yourmysqlusername";
+		this.mdp = "yourpassword";
 		this.createTable = new HashMap<>();
 		this.createT = 0;
 	}
